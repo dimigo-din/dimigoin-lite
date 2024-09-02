@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  scroll-behavior: smooth;
+  background-color: var(--gray300);
+  color: var(--gray1000);
+}
+
+:root {
+  --gray100: #FEFEFF;
+  --gray200: #F6F7FA;
+  --gray300: #EBECF5;
+  --gray400: #D8DAE5;
+  --gray500: #ADB0C2;
+  --gray600: #8D90A0;
+  --gray700: #73768A;
+  --gray800: #555869;
+  --gray900: #3D3F4A;
+  --gray1000: #202128;
+  --primary-brand: #E83C77;
+  --primary-negative: #8099FF;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --gray100: #202128;
+    --gray200: #3D3F4A;
+    --gray300: #555869;
+    --gray400: #73768A;
+    --gray500: #8D90A0;
+    --gray600: #ADB0C2;
+    --gray700: #D8DAE5;
+    --gray800: #EBECF5;
+    --gray900: #F6F7FA;
+    --gray1000: #FEFEFF;
+    --primary-brand: #E83C77;
+    --primary-negative: #8099FF;
+  }
+}
+
+.text-display {
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 64px;
+  letter-spacing: -1.44px;
+}
+
+.text-title {
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px;
+  letter-spacing: -0.48px;
+}
+
+.text-heading {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: -0.4px;
+}
+
+.text-body {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: -0.32px;
+}
+
+.text-label {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 22px;
+  letter-spacing: -0.28px;
+}
+
+.text-footnote {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: -0.24px;
+}
+
+.text-caption {
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+}
