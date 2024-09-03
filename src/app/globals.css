@@ -10,94 +10,139 @@
 
 html, body {
   scroll-behavior: smooth;
-  background-color: var(--gray300);
-  color: var(--gray1000);
+  background-color: var(--backgroud-standard-secondary);
+  color: var(--content-standard-primary);
 }
 
 :root {
-  --gray100: #FEFEFF;
-  --gray200: #F6F7FA;
-  --gray300: #EBECF5;
-  --gray400: #D8DAE5;
-  --gray500: #ADB0C2;
-  --gray600: #8D90A0;
-  --gray700: #73768A;
-  --gray800: #555869;
-  --gray900: #3D3F4A;
-  --gray1000: #202128;
-  --primary-brand: #E83C77;
-  --primary-negative: #8099FF;
+  --solid-red: rgba(255, 64, 53, 1);
+  --solid-orange: rgba(255, 154, 5, 1);
+  --solid-yellow: rgba(245, 201, 5, 1);
+  --solid-green: rgba(50, 204, 88, 1);
+  --solid-blue: rgba(5, 127, 255, 1);
+  --solid-indigo: rgba(91, 89, 222, 1);
+  --solid-purple: rgba(183, 86, 232, 1);
+  --solid-pink: rgba(255, 50, 90, 1);
+  --solid-brown: rgba(167, 137, 99, 1);
+  --solid-black: rgba(0, 0, 0, 1);
+  --solid-white: rgba(255, 255, 255, 1);
+
+  --solid-translucent-red: rgba(255, 64, 53, 0.1);
+  --solid-translucent-orange: rgba(255, 154, 5, 0.1);
+  --solid-translucent-yellow: rgba(245, 201, 5, 0.1);
+  --solid-translucent-green: rgba(50, 204, 88, 0.1);
+  --solid-translucent-blue: rgba(5, 127, 255, 0.1);
+  --solid-translucent-indigo: rgba(91, 89, 222, 0.1);
+  --solid-translucent-purple: rgba(183, 86, 232, 0.1);
+  --solid-translucent-pink: rgba(255, 50, 90, 0.1);
+  --solid-translucent-brown: rgba(167, 137, 99, 0.1);
+  --solid-translucent-black: rgba(0, 0, 0, 0.1);
+  --solid-translucent-white: rgba(255, 255, 255, 0.1);
+
+  --backgroud-standard-primary: rgba(255, 255, 255, 1);
+  --backgroud-standard-secondary: rgba(246, 246, 250, 1);
+  --backgroud-standard-tertiary: rgba(235, 236, 245, 1);
+
+  --backgroud-inverted-primary: rgba(0, 0, 0, 1);
+  --backgroud-inverted-secondary: rgba(9, 9, 10, 1);
+  --backgroud-inverted-tertiary: rgba(14, 14, 15, 1);
+
+  --content-standard-primary: rgba(32, 33, 40, 1);
+  --content-standard-secondary: rgba(32, 33, 40, 0.7);
+  --content-standard-tertiary: rgba(32, 33, 40, 0.5);
+  --content-standard-quaternary: rgba(32, 33, 40, 0.3);
+
+  --content-inverted-primary: rgba(244, 244, 245, 1);
+  --content-inverted-secondary: rgba(244, 244, 245, 0.6);
+  --content-inverted-tertiary: rgba(244, 244, 245, 0.4);
+  --content-inverted-quaternary: rgba(244, 244, 245, 0.2);
+
+  --line-divider: rgba(121, 123, 138, 0.16);
+  --line-outline: rgba(121, 123, 138, 0.12);
+
+  --components-fill-standard-primary: rgba(254, 254, 255, 1);
+  --components-fill-standard-secondary: rgba(250, 250, 250, 1);
+  --components-fill-standard-tertiary: rgba(254, 254, 255, 1);
+  --components-fill-standard-interactive: rgba(254, 254, 255, 1);
+
+  --components-fill-inverted-primary: rgba(19, 19, 20, 1);
+  --components-fill-inverted-secondary: rgba(22, 22, 23, 1);
+  --components-fill-inverted-tertiary: rgba(27, 27, 29, 1);
+
+  --components-interactive-hover: rgba(32, 33, 40, 0.08);
+  --components-interactive-focused: rgba(32, 33, 40, 0.12);
+  --components-interactive-pressed: rgba(32, 33, 40, 0.16);
+
+  --components-translucent-primary: rgba(72, 79, 138, 0.16);
+  --components-translucent-secondary: rgba(72, 79, 138, 0.08);
+  --components-translucent-tertiary: rgba(72, 79, 138, 0.04);
+
+  --core-accent: rgba(232, 60, 119, 1);
+  --core-accent_translucent: rgba(232, 60, 119, 0.1);
+
+  --core-status-negative: rgba(255, 64, 53, 1);
+  --core-status-warning: rgba(245, 201, 5, 1);
+  --core-status-positive: rgba(50, 204, 88, 1);
+  
+  --calender-exam: rgba(91, 89, 222, 1);
+  --calender-home: rgba(50, 204, 88, 1);
+  --calender-event: rgba(245, 201, 5, 1);
+  --calender-stay: rgba(255, 64, 53, 1);
+  --calender-vacation: rgba(5, 127, 255, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --gray100: #202128;
-    --gray200: #3D3F4A;
-    --gray300: #555869;
-    --gray400: #73768A;
-    --gray500: #8D90A0;
-    --gray600: #ADB0C2;
-    --gray700: #D8DAE5;
-    --gray800: #EBECF5;
-    --gray900: #F6F7FA;
-    --gray1000: #FEFEFF;
-    --primary-brand: #E83C77;
-    --primary-negative: #8099FF;
+    --solid-translucent-red: rgba(255, 64, 53, 0.2);
+    --solid-translucent-orange: rgba(255, 154, 5, 0.2);
+    --solid-translucent-yellow: rgba(245, 201, 5, 0.2);
+    --solid-translucent-green: rgba(50, 204, 88, 0.2);
+    --solid-translucent-blue: rgba(5, 127, 255, 0.2);
+    --solid-translucent-indigo: rgba(91, 89, 222, 0.2);
+    --solid-translucent-purple: rgba(183, 86, 232, 0.2);
+    --solid-translucent-pink: rgba(255, 50, 90, 0.2);
+    --solid-translucent-brown: rgba(167, 137, 99, 0.2);
+    --solid-translucent-black: rgba(0, 0, 0, 0.2);
+    --solid-translucent-white: rgba(255, 255, 255, 0.2);
+
+
+    --backgroud-standard-primary: rgba(0, 0, 0, 1);
+    --backgroud-standard-secondary: rgba(9, 9, 10, 1);
+    --backgroud-standard-tertiary: rgba(14, 14, 15, 1);
+
+    --backgroud-inverted-primary: rgba(255, 255, 255, 1);
+    --backgroud-inverted-secondary: rgba(246, 246, 250, 1);
+    --backgroud-inverted-tertiary: rgba(235, 236, 245, 1);
+
+
+    --content-standard-primary: rgba(244, 244, 245, 1);
+    --content-standard-secondary: rgba(244, 244, 245, 0.7);
+    --content-standard-tertiary: rgba(244, 244, 245, 0.5);
+    --content-standard-quaternary: rgba(244, 244, 245, 0.3);
+
+    --content-inverted-primary: rgba(32, 33, 40, 1);
+    --content-inverted-secondary: rgba(32, 33, 40, 0.6);
+    --content-inverted-tertiary: rgba(32, 33, 40, 0.4);
+    --content-inverted-quaternary: rgba(32, 33, 40, 0.2);
+
+    --line-divider: rgba(121, 123, 138, 0.32);
+    --line-outline: rgba(121, 123, 138, 0.24);
+
+    --components-fill-standard-primary: rgba(19, 19, 20, 1);
+    --components-fill-standard-secondary: rgba(22, 22, 23, 1);
+    --components-fill-standard-tertiary: rgba(27, 27, 29, 1);
+    --components-fill-standard-interactive: rgba(254, 254, 255, 0.12);
+    
+    --components-fill-inverted-primary: rgba(254, 254, 255, 1);
+    --components-fill-inverted-secondary: rgba(250, 250, 250, 1);
+    --components-fill-inverted-tertiary: rgba(254, 254, 255, 1);
+
+    --components-interactive-hover: rgba(244, 244, 245, 0.08);
+    --components-interactive-focused: rgba(244, 244, 245, 0.12);
+    --components-interactive-pressed: rgba(244, 244, 245, 0.16);
+
+    --components-translucent-primary: rgba(116, 118, 138, 0.24);
+    --components-translucent-secondary: rgba(116, 118, 138, 0.18);
+    --components-translucent-tertiary: rgba(116, 118, 138, 0.16);
   }
-}
-
-.text-display {
-  font-size: 48px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 64px;
-  letter-spacing: -1.44px;
-}
-
-.text-title {
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 32px;
-  letter-spacing: -0.48px;
-}
-
-.text-heading {
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 28px;
-  letter-spacing: -0.4px;
-}
-
-.text-body {
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 24px;
-  letter-spacing: -0.32px;
-}
-
-.text-label {
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 22px;
-  letter-spacing: -0.28px;
-}
-
-.text-footnote {
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 20px;
-  letter-spacing: -0.24px;
-}
-
-.text-caption {
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 16px;
-  letter-spacing: -0.2px;
 }
