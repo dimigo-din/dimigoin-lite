@@ -1,6 +1,7 @@
 import './globals.css';
 import localFont from 'next/font/local';
 import 'react-material-symbols/rounded';
+import Header from '@/components/widgets/Header';
 
 const suit = localFont({
   src: [
@@ -26,7 +27,10 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="#5941F5" />
         <meta property="og:image" content="https://lite.dimigo.in/images/banner.png" />
       </head>
-      <body className={suit.className}>{children}</body>
+      <body className={suit.className}>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
