@@ -1,5 +1,6 @@
 import './globals.css';
 import localFont from 'next/font/local';
+import 'react-material-symbols/rounded';
 
 const suit = localFont({
   src: [
