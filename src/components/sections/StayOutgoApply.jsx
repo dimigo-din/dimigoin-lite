@@ -157,9 +157,7 @@ export default function StayOutgoApply() {
 
   return (
     <Box title="잔류 중 외출 신청" description="잔류 중 외출을 신청해주세요.">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full flex flex-col justify-start items-start px-spacing-700 py-spacing-550 gap-spacing-550">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-spacing-550 w-full">
         <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center gap-spacing-550">
           <div className="flex flex-col gap-spacing-200 justify-start items-start">
             <strong className="text-footnote text-content-standard-primary">외출 요일 선택</strong>

@@ -1,5 +1,4 @@
 import Box from '@/components/widgets/Box';
-import { Span } from 'next/dist/server/lib/trace/tracer';
 
 export default function LaundryApply() {
   return (

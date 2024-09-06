@@ -11,7 +11,7 @@ export default function Header({ isForSpace = false }) {
       <div className="w-full max-w-4xl px-spacing-550 py-spacing-700 flex flex-row justify-between items-center">
         <Link href={'/'} className="flex flex-row justify-center items-center gap-spacing-300">
           <Image src="/images/dimigoin_logo.svg" alt="dimigoin_logo" width={32} height={32} />
-          <strong className="text-core-accent text-body">디미고인 Lite</strong>
+          <strong className="text-content-standard-primary text-body">디미고인 Lite</strong>
         </Link>
         <div className="flex flex-row gap-spacing-400 items-center">
           <span className="text-footnote text-content-standard-tertiary">로그아웃</span>
