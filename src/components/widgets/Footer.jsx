@@ -4,13 +4,37 @@ import Link from 'next/link';
 export default function Footer() {
   return (
     <div className="w-full flex justify-center items-center">
-      <div className="w-full max-w-4xl px-spacing-550 py-spacing-700 flex flex-row justify-between items-center">
-        <Link href={'/'} className="flex flex-row justify-center items-center gap-spacing-300">
-          <Image src="/images/dimigoin_logo.svg" alt="dimigoin_logo" width={32} height={32} />
-          <strong className="text-core-accent text-body">디미고인 Lite</strong>
+      <div className="w-full max-w-4xl px-spacing-550 py-spacing-700 flex flex-col md:flex-row justify-between items-center gap-spacing-300">
+        <Link
+          href="https://github.com/dimigo-din"
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-row justify-center items-center gap-spacing-500 self-start">
+          <Image src="/images/din_logo.svg" alt="din_logo" width={48} height={48} />
+          <div className="flex flex-col justify-start items-start">
+            <strong className="text-content-standard-primary text-title">DIN</strong>
+            <strong className="text-content-standard-tertiary text-body">DIMIGO INTRANET</strong>
+          </div>
         </Link>
-        <div className="flex flex-row gap-spacing-400 items-center">
-          <strong className="text-body text-content-standard-primary">Copyright 2024 DIN All rights reserved</strong>
+        <div className="flex flex-col gap-spacing-100 items-end self-end">
+          <span className="text-label text-content-standard-tertiary">
+            Designed by{' '}
+            <Link href="https://github.com/ableuk" target="_blank" rel="noreferrer">
+              ableuk
+            </Link>
+            {' / '}
+            Developed by{' '}
+            <Link href="https://github.com/sspzoa" target="_blank" rel="noreferrer">
+              sspzoa
+            </Link>
+          </span>
+          <strong className="text-label text-content-standard-tertiary">
+            &copy; 2024{' '}
+            <Link href="https://github.com/dimigo-din" target="_blank" rel="noreferrer">
+              DIN
+            </Link>{' '}
+            All rights reserved
+          </strong>
         </div>
       </div>
     </div>

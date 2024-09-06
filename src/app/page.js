@@ -3,6 +3,7 @@ import LaundryApply from '@/components/sections/LaundryApply';
 import MyStatus from '@/components/sections/MySatus';
 import StayApply from '@/components/sections/StayApply';
 import StayOutgoApply from '@/components/sections/StayOutgoApply';
+import Footer from '@/components/widgets/Footer';
 import Header from '@/components/widgets/Header';
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
         <FrigoApply />
         <LaundryApply />
       </div>
+      <Footer />
     </div>
   );
 }

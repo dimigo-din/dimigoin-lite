@@ -19,6 +19,41 @@ const Button = ({ children, primary, onClick, type = 'button' }) => (
   </button>
 );
 
+const TimeOption = ({ t, isSelected, onClick }) => {
+  const getDisplayText = (text) => {
+    if (text === '야자 1타임 뒤')
+      return (
+        <>
+          <span className="md:hidden">야자1 뒤</span>
+          <span className="hidden md:inline">야자 1타임 뒤</span>
+        </>
+      );
+    if (text === '야자 2타임 뒤')
+      return (
+        <>
+          <span className="md:hidden">야자2 뒤</span>
+          <span className="hidden md:inline">야자 2타임 뒤</span>
+        </>
+      );
+    return text;
+  };
+
+  return (
+    <div
+      className={`h-[40px] w-full flex justify-center items-center rounded-radius-300 cursor-pointer ${
+        isSelected ? 'bg-components-fill-standard-tertiary' : 'bg-background-standard-secondary'
+      }`}
+      onClick={onClick}
+      onKeyDown={onClick}>
+      {isSelected ? (
+        <strong className="text-content-standard-primary text-label text-center">{getDisplayText(t)}</strong>
+      ) : (
+        <span className="text-content-standard-quaternary text-label text-center">{getDisplayText(t)}</span>
+      )}
+    </div>
+  );
+};
+
 export default function FrigoApply() {
   const [reason, setReason] = useState('');
   const [time, setTime] = useState('종례 후');
@@ -29,7 +64,7 @@ export default function FrigoApply() {
   };
 
   return (
-    <Box title="금요귀가 신청" description="금요귀가를 신청해주세요." defaultExpanded={true}>
+    <Box title="금요귀가 신청" description="금요귀가를 신청해주세요.">
       <form onSubmit={handleSubmit} className="flex flex-col gap-spacing-550 w-full">
         <div className="w-full flex flex-col gap-spacing-200 justify-start items-start">
           <strong className="text-footnote text-content-standard-primary">금요귀가 사유 작성</strong>
@@ -44,19 +79,7 @@ export default function FrigoApply() {
           />
           <div className="w-full flex flex-row gap-spacing-100 bg-background-standard-secondary p-spacing-100 rounded-radius-400">
             {TIMES.map((t) => (
-              <div
-                key={t}
-                className={`h-[40px] w-full flex justify-center items-center rounded-radius-300 cursor-pointer ${
-                  time === t ? 'bg-components-fill-standard-tertiary' : 'bg-background-standard-secondary'
-                }`}
-                onClick={() => setTime(t)}
-                onKeyDown={() => setTime(t)}>
-                {time === t ? (
-                  <strong className="text-content-standard-primary text-label">{t}</strong>
-                ) : (
-                  <span className="text-content-standard-quaternary text-label">{t}</span>
-                )}
-              </div>
+              <TimeOption key={t} t={t} isSelected={time === t} onClick={() => setTime(t)} />
             ))}
           </div>
         </div>
