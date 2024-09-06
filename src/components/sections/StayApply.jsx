@@ -2,32 +2,40 @@
 
 import Box from '@/components/widgets/Box';
 import React, { useState, useCallback } from 'react';
-import { MaterialSymbol } from 'react-material-symbols';
 
 const CURRENT_USER = {
-  studentId: '2024',
-  name: '김코딩',
+  studentId: '2209',
+  name: '김진욱',
 };
 
 const RESERVED_SEATS = {
-  A1: { studentId: '2001', name: '김예약' },
-  B3: { studentId: '2002', name: '이예약' },
-  C5: { studentId: '2003', name: '박예약' },
-  D7: { studentId: '2004', name: '최예약' },
-  E9: { studentId: '2005', name: '정예약' },
-  F11: { studentId: '2006', name: '강예약' },
-  G13: { studentId: '2007', name: '조예약' },
-  H15: { studentId: '2008', name: '윤예약' },
-  I17: { studentId: '2009', name: '장예약' },
-  J2: { studentId: '2010', name: '임예약' },
-  K4: { studentId: '2011', name: '한예약' },
-  L6: { studentId: '2012', name: '오예약' },
-  M8: { studentId: '2013', name: '서예약' },
-  N10: { studentId: '2014', name: '신예약' },
-  O12: { studentId: '2015', name: '권예약' },
+  A1: { studentId: '2201', name: '김민수' },
+  A2: { studentId: '2202', name: '박지훈' },
+  A3: { studentId: '2203', name: '이승현' },
+  A4: { studentId: '2204', name: '김진우' },
+  A5: { studentId: '2205', name: '이승민' },
 };
 
-const TextLabel = ({ children, className = '' }) => <span className={`text-footnote ${className}`}>{children}</span>;
+const AVAILABLE_SEATS = [
+  'A1',
+  'A2',
+  'A3',
+  'A4',
+  'A5',
+  'A6',
+  'A7',
+  'A8',
+  'A9',
+  'A10',
+  'A11',
+  'A12',
+  'A13',
+  'A14',
+  'A15',
+  'A16',
+  'A17',
+  'A18',
+];
 
 const GuideText = ({ text }) => (
   <div className="w-[40px] h-[30px] rounded-radius-100 flex justify-center items-center">
@@ -107,7 +115,11 @@ const SeatPair = ({ row, col, selectedSeat, onSeatSelect }) => {
         );
       }
 
-      return <Seat type="available" coordinate={coordinate} onClick={onSeatSelect} />;
+      if (AVAILABLE_SEATS.includes(coordinate)) {
+        return <Seat type="available" coordinate={coordinate} onClick={onSeatSelect} />;
+      }
+
+      return <Seat type="unavailable" coordinate={coordinate} onClick={onSeatSelect} />;
     },
     [selectedSeat, onSeatSelect],
   );
