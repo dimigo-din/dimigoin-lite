@@ -79,7 +79,8 @@ html, body {
   --components-translucent-tertiary: rgba(72, 79, 138, 0.04);
 
   --core-accent: rgba(232, 60, 119, 1);
-  --core-accent_translucent: rgba(232, 60, 119, 0.1);
+  --core-accent-secondary: rgba(232, 60, 119, 0.5);
+  --core-accent-translucent: rgba(232, 60, 119, 0.1);
 
   --core-status-negative: rgba(255, 64, 53, 1);
   --core-status-warning: rgba(245, 201, 5, 1);

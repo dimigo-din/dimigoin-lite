@@ -71,7 +71,8 @@ module.exports = {
         'components-translucent-tertiary': 'var(--components-translucent-tertiary)',
 
         'core-accent': 'var(--core-accent)',
-        'core-accent-translucent': 'var(--core-accent_translucent)',
+        'core-accent-secondary': 'var(--core-accent-secondary)',
+        'core-accent-translucent': 'var(--core-accent-translucent)',
 
         'core-status-negative': 'var(--core-status-negative)',
         'core-status-warning': 'var(--core-status-warning)',

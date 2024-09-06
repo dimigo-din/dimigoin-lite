@@ -39,7 +39,7 @@ export default function Box({ title, description, children, isExpandable = true 
         )}
       </div>
       {(!isExpandable || isExpanded) && (
-        <div className="w-full flex flex-col items-start justify-start md:px-spacing-700 md:py-spacing-550">
+        <div className="w-full flex flex-col items-start justify-start md:px-spacing-500 md:py-spacing-200">
           {children}
         </div>
       )}

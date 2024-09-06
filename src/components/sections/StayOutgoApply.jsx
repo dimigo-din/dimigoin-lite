@@ -193,7 +193,7 @@ export default function StayOutgoApply() {
         <div className="w-full flex flex-col gap-spacing-200 justify-start items-start">
           <strong className="text-footnote text-content-standard-primary">외출 사유 작성</strong>
           <input
-            className="w-full px-spacing-300 py-spacing-400 rounded-radius-300 bg-background-standard-secondary text-content-standard-primary text-caption"
+            className="w-full px-spacing-300 py-spacing-400 rounded-radius-300 bg-background-standard-secondary text-content-standard-primary text-footnote"
             placeholder="ex) 학원, 병원"
             value={reason}
             onChange={(e) => {
