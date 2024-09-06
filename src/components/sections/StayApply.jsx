@@ -335,7 +335,7 @@ export default function StayApply() {
   };
 
   return (
-    <Box title="잔류 신청" description="원하시는 잔류 좌석을 선택해주세요.">
+    <Box title="잔류 신청" description="원하시는 잔류 좌석을 선택해주세요." defaultExpanded={true}>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col md:flex-row justify-start items-start w-full gap-spacing-700">
