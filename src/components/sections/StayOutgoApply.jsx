@@ -123,20 +123,12 @@ export default function StayOutgoApply() {
     lunch: false,
     dinner: false,
   });
-  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!reason.trim()) {
-      setErrorMessage('외출 사유를 입력해주세요.');
-      return;
-    }
-    setErrorMessage('');
-    alert(selectedDay);
-    alert(startTime);
-    alert(endTime);
-    alert(reason);
-    alert(JSON.stringify(selectedMeals));
+    alert(
+      `요일: ${selectedDay}\n외출 시작 시간: ${startTime}\n귀교 시간: ${endTime}\n외출 시유: ${reason}\n급식 취소: ${JSON.stringify(selectedMeals)}`,
+    );
   };
 
   const applyPresetSettings = () => {
@@ -145,7 +137,6 @@ export default function StayOutgoApply() {
     setStartTime(SELF_DEVELOPMENT_SETTINGS.startTime);
     setEndTime(SELF_DEVELOPMENT_SETTINGS.endTime);
     setMealCancel(SELF_DEVELOPMENT_SETTINGS.mealCancel);
-    setErrorMessage('');
   };
 
   const toggleMealCancel = (meal) => {
@@ -198,11 +189,9 @@ export default function StayOutgoApply() {
             value={reason}
             onChange={(e) => {
               setReason(e.target.value);
-              setErrorMessage('');
             }}
             required
           />
-          {errorMessage && <TextLabel className="text-error">{errorMessage}</TextLabel>}
           <Button onClick={applyPresetSettings}>자기계발외출</Button>
         </div>
         <Button type="submit" primary>

@@ -1,7 +1,7 @@
 'use client';
 
 import Box from '@/components/widgets/Box';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 const CURRENT_USER = {
   studentId: '2209',
@@ -35,6 +35,78 @@ const AVAILABLE_SEATS = [
   'A16',
   'A17',
   'A18',
+  'B1',
+  'B2',
+  'B3',
+  'B4',
+  'B5',
+  'B6',
+  'B7',
+  'B8',
+  'B9',
+  'B10',
+  'B11',
+  'B12',
+  'B13',
+  'B14',
+  'B15',
+  'B16',
+  'B17',
+  'B18',
+  'C1',
+  'C2',
+  'C3',
+  'C4',
+  'C5',
+  'C6',
+  'C7',
+  'C8',
+  'C9',
+  'C10',
+  'C11',
+  'C12',
+  'C13',
+  'C14',
+  'C15',
+  'C16',
+  'C17',
+  'C18',
+  'D1',
+  'D2',
+  'D3',
+  'D4',
+  'D5',
+  'D6',
+  'D7',
+  'D8',
+  'D9',
+  'D10',
+  'D11',
+  'D12',
+  'D13',
+  'D14',
+  'D15',
+  'D16',
+  'D17',
+  'D18',
+  'E1',
+  'E2',
+  'E3',
+  'E4',
+  'E5',
+  'E6',
+  'E7',
+  'E8',
+  'E9',
+  'E10',
+  'E11',
+  'E12',
+  'E13',
+  'E14',
+  'E15',
+  'E16',
+  'E17',
+  'E18',
 ];
 
 const GuideText = ({ text }) => (
@@ -125,7 +197,7 @@ const SeatPair = ({ row, col, selectedSeat, onSeatSelect }) => {
   );
 
   return (
-    <div className="flex flex-col gap-spacing-100">
+    <div className="flex flex-col gap-spacing-150">
       {generateSeat(row, col)}
       {generateSeat(String.fromCharCode(row.charCodeAt(0) + 1), col)}
     </div>
@@ -225,39 +297,41 @@ const LegendItem = ({ color, text }) => (
   </div>
 );
 
-const TextInput = ({ value, onChange, placeholder, disabled }) => (
+const TextInput = ({ value, onChange, placeholder, disabled, required }) => (
   <input
     type="text"
     value={value}
     onChange={onChange}
     placeholder={placeholder}
     disabled={disabled}
+    required={required}
     className="w-full px-spacing-400 py-spacing-300 bg-background-standard-secondary rounded-radius-200 text-footnote text-content-standard-primary placeholder:text-content-standard-tertiary disabled:bg-background-standard-tertiary disabled:text-content-standard-tertiary disabled:cursor-not-allowed"
   />
 );
 
 export default function StayApply() {
-  const [selectedSeat, setSelectedSeat] = useState(null);
+  const [selectedSeat, setSelectedSeat] = useState('NONE');
   const [unselectedReason, setUnselectedReason] = useState('');
 
   const handleSeatSelect = useCallback((coordinate) => {
-    setSelectedSeat((prevSeat) => (prevSeat === coordinate ? null : coordinate));
+    setSelectedSeat((prevSeat) => (prevSeat === coordinate ? 'NONE' : coordinate));
   }, []);
 
   const handleUnselectedReasonChange = (e) => {
     setUnselectedReason(e.target.value);
   };
 
+  useEffect(() => {
+    if (selectedSeat !== 'NONE') {
+      setUnselectedReason('');
+    }
+  }, [selectedSeat]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!selectedSeat && !unselectedReason.trim()) {
-      return;
-    }
-    if (selectedSeat) {
-      alert(`신청된 좌석: ${selectedSeat}\n학번: ${CURRENT_USER.studentId}\n이름: ${CURRENT_USER.name}`);
-    } else {
-      alert(`미선택 사유: ${unselectedReason}\n학번: ${CURRENT_USER.studentId}\n이름: ${CURRENT_USER.name}`);
-    }
+    alert(
+      `신청된 좌석: ${selectedSeat}\n미선택 사유: ${unselectedReason}\n학번: ${CURRENT_USER.studentId}\n이름: ${CURRENT_USER.name}`,
+    );
   };
 
   return (
@@ -282,13 +356,16 @@ export default function StayApply() {
             <strong className="text-label">좌석 선택</strong>
             <div className="w-full flex flex-row justify-start items-center gap-spacing-200">
               <span className="text-footnote text-content-standard-tertiary">내가 선택한 좌석</span>
-              <strong className="text-label text-core-accent">{selectedSeat || '미선택'}</strong>
+              <strong className="text-label text-core-accent">
+                {selectedSeat === 'NONE' ? '미선택' : selectedSeat}
+              </strong>
             </div>
             <TextInput
               value={unselectedReason}
               onChange={handleUnselectedReasonChange}
               placeholder="미선택 사유를 입력해주세요"
-              disabled={!!selectedSeat}
+              disabled={selectedSeat !== 'NONE'}
+              required={selectedSeat === 'NONE'}
             />
             <Button type="submit" primary>
               <span className="text-center w-full">잔류 신청하기</span>
