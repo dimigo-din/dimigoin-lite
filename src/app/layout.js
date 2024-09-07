@@ -31,10 +31,7 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F6F6FA" />
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090A" />
       </head>
-      <body className={suit.className}>
-        <Header />
-        {children}
-      </body>
+      <body className={suit.className}>{children}</body>
     </html>
   );
 }
