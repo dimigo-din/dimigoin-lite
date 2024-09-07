@@ -16,7 +16,7 @@ const suit = localFont({
 export const metadata = {
   title: '디미고인 라이트',
   description:
-    '한국디지털미디어고등학교 인트라넷, 디미고인 Lite. 디미고인 Lite는 디미고인의 기능을 최대한 유지하면서도 불필요한 기능을 제거하여 가벼운 사용 경험을 제공합니다.',
+    '한국디지털미디어고등학교 인트라넷, 디미고인 라이트. 디미고인 라이트는 디미고인의 기능을 최대한 유지하면서도 불필요한 기능을 제거하여 가벼운 사용 경험을 제공합니다.',
 };
 
 export default function RootLayout({ children }) {

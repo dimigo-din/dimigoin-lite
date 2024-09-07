@@ -2,6 +2,7 @@
 
 import Box from '@/components/widgets/Box';
 import React, { useState, useCallback, useEffect } from 'react';
+import { MaterialSymbol } from 'react-material-symbols';
 
 const CURRENT_USER = {
   studentId: '2209',
@@ -218,7 +219,7 @@ const Seats = ({ selectedSeat, onSeatSelect }) => {
             <GuideText text="A" />
             <GuideText text="B" />
           </div>
-          {rows.slice(1).map((row, index) => (
+          {rows.slice(1).map((row) => (
             <div key={row} className="flex flex-col gap-spacing-150">
               <GuideText text={row} />
               <GuideText text={String.fromCharCode(row.charCodeAt(0) + 1)} />
@@ -309,9 +310,28 @@ const TextInput = ({ value, onChange, placeholder, disabled, required }) => (
   />
 );
 
+const Modal = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+      <div className="h-full md:h-auto md:m-spacing-200 flex flex-col gap-spacing-300 bg-background-standard-primary p-spacing-550 rounded-radius-300 overflow-auto">
+        <div className="flex justify-between items-center">
+          <strong className="text-heading text-content-standard-primary">좌석 배치도</strong>
+          <button type="button" onClick={onClose} className="text-content-standard-primary">
+            <MaterialSymbol weight={300} icon="close" size={24} />
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+};
+
 export default function StayApply() {
   const [selectedSeat, setSelectedSeat] = useState('NONE');
   const [unselectedReason, setUnselectedReason] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSeatSelect = useCallback((coordinate) => {
     setSelectedSeat((prevSeat) => (prevSeat === coordinate ? 'NONE' : coordinate));
@@ -334,15 +354,29 @@ export default function StayApply() {
     );
   };
 
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <Box title="잔류 신청" description="원하시는 잔류 좌석을 선택해주세요.">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col md:flex-row justify-start items-start w-full gap-spacing-700">
-        <div className="w-full h-[200px] md:h-[400px] md:w-[500px] overflow-auto flex-shrink-0">
-          <Seats selectedSeat={selectedSeat} onSeatSelect={handleSeatSelect} />
+        <div className="w-full flex flex-col justify-start items-start gap-spacing-200">
+          <div
+            className="flex flex-row gap-spacing-100 justify-center items-center cursor-pointer"
+            onClick={openModal}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && openModal()}>
+            <MaterialSymbol icon="fullscreen" size={16} weight={300} className="text-content-standard-tertiary" />
+            <strong className="text-label text-content-standard-tertiary">크게 보기</strong>
+          </div>
+          <div className="w-full h-[200px] md:h-[400px] md:w-[500px] overflow-auto flex-shrink-0">
+            <Seats selectedSeat={selectedSeat} onSeatSelect={handleSeatSelect} />
+          </div>
         </div>
-        <div className="md:h-[400px] w-full flex flex-col justify-between items-start gap-spacing-700">
+        <div className="md:h-[430px] w-full flex flex-col justify-between items-start gap-spacing-700">
           <div className="w-full flex flex-row flex-wrap md:flex-col justify-start items-start gap-spacing-200">
             <LegendItem color="bg-core-accent-translucent" text="이미 신청된 자리" />
             <LegendItem color="bg-core-accent" text="현재 선택한 자리" />
@@ -373,6 +407,11 @@ export default function StayApply() {
           </div>
         </div>
       </form>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div className="w-full h-full overflow-auto">
+          <Seats selectedSeat={selectedSeat} onSeatSelect={handleSeatSelect} />
+        </div>
+      </Modal>
     </Box>
   );
 }
