@@ -41,7 +41,7 @@ const TimeOption = ({ t, isSelected, onClick }) => {
   return (
     <div
       className={`h-[40px] w-full flex justify-center items-center rounded-radius-300 cursor-pointer ${
-        isSelected ? 'bg-components-fill-standard-tertiary' : 'bg-background-standard-secondary'
+        isSelected ? 'bg-components-fill-standard-tertiary' : 'bg-transparent'
       }`}
       onClick={onClick}
       onKeyDown={onClick}>
@@ -69,7 +69,7 @@ export default function FrigoApply() {
         <div className="w-full flex flex-col gap-spacing-200 justify-start items-start">
           <strong className="text-footnote text-content-standard-primary">금요귀가 사유 작성</strong>
           <input
-            className="w-full px-spacing-300 py-spacing-400 rounded-radius-300 bg-background-standard-secondary text-content-standard-primary text-footnote"
+            className="w-full px-spacing-300 py-spacing-400 rounded-radius-300 bg-background-standard-secondary  text-content-standard-primary text-footnote"
             placeholder="ex) 학원, 병원"
             value={reason}
             onChange={(e) => {
@@ -77,7 +77,7 @@ export default function FrigoApply() {
             }}
             required
           />
-          <div className="w-full flex flex-row gap-spacing-100 bg-background-standard-secondary p-spacing-100 rounded-radius-400">
+          <div className="w-full flex flex-row gap-spacing-100  bg-components-translucent-secondary p-spacing-100 rounded-radius-400">
             {TIMES.map((t) => (
               <TimeOption key={t} t={t} isSelected={time === t} onClick={() => setTime(t)} />
             ))}

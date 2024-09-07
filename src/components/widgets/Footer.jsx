@@ -10,10 +10,10 @@ export default function Footer() {
           target="_blank"
           rel="noreferrer"
           className="flex flex-row justify-center items-center gap-spacing-500 self-start">
-          <Image src="/images/din_logo.svg" alt="din_logo" width={48} height={48} />
+          <Image src="/images/din_logo.svg" alt="din_logo" width={40} height={40} />
           <div className="flex flex-col justify-start items-start">
             <strong className="text-content-standard-primary text-title">DIN</strong>
-            <strong className="text-content-standard-tertiary text-body">DIMIGO INTRANET</strong>
+            <strong className="text-content-standard-tertiary text-footnote">DIMIGO INTRANET</strong>
           </div>
         </Link>
         <div className="flex flex-col gap-spacing-100 items-end self-end">

@@ -12,10 +12,10 @@ export default function Home() {
       <Header isForSpace={true} />
       <div className="flex flex-col justify-center items-center w-full px-spacing-400 py-spacing-700 gap-spacing-400">
         <MyStatus />
+        <LaundryApply />
         <StayApply />
         <StayOutgoApply />
         <FrigoApply />
-        <LaundryApply />
       </div>
       <Footer />
     </div>

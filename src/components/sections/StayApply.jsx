@@ -362,7 +362,10 @@ export default function StayApply() {
       <form
         onSubmit={handleSubmit}
         className="flex flex-col md:flex-row justify-start items-start w-full gap-spacing-700">
-        <div className="w-full flex flex-col justify-start items-start gap-spacing-200">
+        <div className="w-full flex flex-col justify-end items-end gap-spacing-200">
+          <div className="w-full h-[200px] md:h-[400px] md:w-[500px] overflow-auto flex-shrink-0">
+            <Seats selectedSeat={selectedSeat} onSeatSelect={handleSeatSelect} />
+          </div>
           <div
             className="flex flex-row gap-spacing-100 justify-center items-center cursor-pointer"
             onClick={openModal}
@@ -371,9 +374,6 @@ export default function StayApply() {
             onKeyDown={(e) => e.key === 'Enter' && openModal()}>
             <MaterialSymbol icon="fullscreen" size={16} weight={300} className="text-content-standard-tertiary" />
             <strong className="text-label text-content-standard-tertiary">크게 보기</strong>
-          </div>
-          <div className="w-full h-[200px] md:h-[400px] md:w-[500px] overflow-auto flex-shrink-0">
-            <Seats selectedSeat={selectedSeat} onSeatSelect={handleSeatSelect} />
           </div>
         </div>
         <div className="md:h-[430px] w-full flex flex-col justify-between items-start gap-spacing-700">
