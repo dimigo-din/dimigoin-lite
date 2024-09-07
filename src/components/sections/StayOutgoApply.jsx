@@ -27,6 +27,45 @@ const SELF_DEVELOPMENT_SETTINGS = {
   },
 };
 
+const APPLICATION_STATUSES = [
+  {
+    day: 'saturday',
+    reason: '학원',
+    startTime: '08:00',
+    endTime: '23:00',
+    mealCancel: {
+      breakfast: true,
+      lunch: true,
+      dinner: true,
+    },
+    status: '대기중',
+  },
+  {
+    day: 'sunday',
+    reason: '자기계발외출',
+    startTime: '10:20',
+    endTime: '14:00',
+    mealCancel: {
+      breakfast: false,
+      lunch: true,
+      dinner: false,
+    },
+    status: '승인됨',
+  },
+  {
+    day: 'sunday',
+    reason: '놀이동산',
+    startTime: '15:00',
+    endTime: '23:00',
+    mealCancel: {
+      breakfast: false,
+      lunch: false,
+      dinner: true,
+    },
+    status: '반려됨',
+  },
+];
+
 const TextLabel = ({ children, className = '' }) => <span className={`text-footnote ${className}`}>{children}</span>;
 
 const TimeSelector = ({ label, value, onChange }) => (
@@ -146,6 +185,46 @@ export default function StayOutgoApply() {
     }));
   };
 
+  const getStatusClass = (status) => {
+    switch (status) {
+      case '승인됨':
+        return 'bg-solid-translucent-green';
+      case '반려됨':
+        return 'bg-solid-translucent-red';
+      default:
+        return 'bg-components-translucent-tertiary';
+    }
+  };
+
+  const getMealsCancelledText = (mealCancel) => {
+    const cancelledMeals = Object.entries(mealCancel)
+      .filter(([_, isCancelled]) => isCancelled)
+      .map(([meal, _]) => {
+        switch (meal) {
+          case 'breakfast':
+            return '조식';
+          case 'lunch':
+            return '중식';
+          case 'dinner':
+            return '석식';
+          default:
+            return '';
+        }
+      });
+    return cancelledMeals.length > 0 ? `${cancelledMeals.join(', ')} 취소` : '급식 취소 없음';
+  };
+
+  const getStatusElement = (status) => {
+    switch (status) {
+      case '승인됨':
+        return <strong className="text-label text-content-standard-primary flex-shrink-0">승인됨</strong>;
+      case '반려됨':
+        return <strong className="text-label text-content-standard-primary flex-shrink-0">반려됨</strong>;
+      default:
+        return <span className="text-label text-content-standard-quaternary flex-shrink-0">{status}</span>;
+    }
+  };
+
   return (
     <Box title="잔류 중 외출 신청" description="잔류 중 외출을 신청해주세요.">
       <form onSubmit={handleSubmit} className="flex flex-col gap-spacing-550 w-full">
@@ -197,6 +276,23 @@ export default function StayOutgoApply() {
         <Button type="submit" primary>
           외출 신청하기
         </Button>
+        <div className="w-full flex flex-col gap-spacing-400 justify-start items-start">
+          <strong className="text-footnote text-content-standard-primary">신청 현황</strong>
+          {APPLICATION_STATUSES.map((application, index) => (
+            <div
+              key={index}
+              className={`flex flex-row px-spacing-500 py-spacing-400 ${getStatusClass(application.status)} gap-spacing-300 w-full rounded-radius-600`}>
+              <strong className="text-label text-content-standard-primary flex-shrink-0">
+                {application.day === 'saturday' ? '토요일' : '일요일'} 외출
+              </strong>
+              <span className="w-full text-label text-content-standard-secondary">
+                {application.reason} / {getMealsCancelledText(application.mealCancel)} / {application.startTime} ~{' '}
+                {application.endTime}
+              </span>
+              {getStatusElement(application.status)}
+            </div>
+          ))}
+        </div>
       </form>
     </Box>
   );

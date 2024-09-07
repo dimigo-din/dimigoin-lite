@@ -199,7 +199,7 @@ export default function LaundryApply() {
   };
 
   return (
-    <Box title="세탁 신청" description="세탁기 및 건조기를 신청해주세요." defaultExpanded={true}>
+    <Box title="세탁 신청" description="세탁기 및 건조기를 신청해주세요.">
       <div className="flex flex-col gap-spacing-400 w-full">
         <div className="w-full flex flex-col gap-spacing-200 justify-start items-start">
           <div className="w-full flex flex-row gap-spacing-100 bg-components-translucent-secondary p-spacing-100 rounded-radius-400">
