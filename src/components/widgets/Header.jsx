@@ -9,9 +9,11 @@ export default function Header({ isForSpace = false }) {
   return (
     <div className={headerClasses}>
       <div className="w-full max-w-4xl px-spacing-550 py-spacing-700 flex flex-row justify-between items-center">
-        <Link href={'/'} className="flex flex-row justify-center items-center gap-spacing-300">
+        <Link href="/" className="flex flex-row justify-center items-center gap-spacing-300">
           <Image src="/images/dimigoin_logo.svg" alt="dimigoin_logo" width={32} height={32} />
-          <strong className="text-content-standard-primary text-body">디미고인 Lite</strong>
+          <span className="text-content-standard-tertiary text-body">
+            <strong className="text-content-standard-primary">디미고인</strong> 라이트
+          </span>
         </Link>
         <div className="flex flex-row gap-spacing-400 items-center">
           <span className="text-footnote text-content-standard-tertiary">로그아웃</span>
