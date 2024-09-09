@@ -31,6 +31,7 @@ export const refreshJWT = async () => {
       token: refreshToken,
     });
     setJWTCookie(data.accessToken);
+    setRefreshToken(data.refreshToken);
     return data;
   } catch (error) {
     console.error('Refresh token error:', error);
