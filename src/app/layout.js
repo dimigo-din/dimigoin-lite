@@ -1,7 +1,9 @@
 import './globals.css';
 import localFont from 'next/font/local';
 import 'react-material-symbols/rounded';
-import Header from '@/components/widgets/Header';
+import "react-toastify/ReactToastify.css";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import {ToastContainer} from "react-toastify";
 
 const suit = localFont({
   src: [
@@ -26,12 +28,18 @@ export default function RootLayout({ children }) {
         <meta property="og:image" content="https://lite.dimigo.in/images/og-image.png" />
         <meta name="viewport" content="initial-scale=1, viewport-fit=cover" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="#5941F5" />
+        <meta name="apple-mobile-web-app-status-bar-style" media="(prefers-color-scheme: light)" content="#F6F6FA" />
+        <meta name="apple-mobile-web-app-status-bar-style" media="(prefers-color-scheme: dark)" content="#09090A" />
         <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F6F6FA" />
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090A" />
       </head>
-      <body className={suit.className}>{children}</body>
+      <body className={suit.className}>
+        <GoogleOAuthProvider
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+          {children}
+          <ToastContainer />
+        </GoogleOAuthProvider>
+      </body>
     </html>
   );
 }

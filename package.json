@@ -9,11 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.12.1",
+    "axios": "^1.7.7",
     "jsdoc": "^4.0.3",
     "next": "14.2.7",
     "react": "^18",
+    "react-cookie": "^7.2.0",
     "react-dom": "^18",
-    "react-material-symbols": "^4.4.0"
+    "react-material-symbols": "^4.4.0",
+    "react-toastify": "^10.0.5"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",

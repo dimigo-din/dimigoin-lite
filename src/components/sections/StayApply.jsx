@@ -281,7 +281,7 @@ const Button = ({ children, primary, onClick, type = 'button' }) => (
   <button
     type={type}
     onClick={onClick}
-    className={`w-full flex flex-row justify-center items-center px-spacing-400 py-spacing-300 rounded-radius-200 ${
+    className={`w-full flex flex-row justify-center items-center py-spacing-200 rounded-radius-200 ${
       primary ? 'bg-core-accent' : 'bg-background-standard-secondary'
     }`}>
     <strong
