@@ -15,10 +15,12 @@ const useLogin = () => {
         window.location.href = '/';
       } catch (error) {
         console.error('Login failed:', error);
+        toast.error('로그인에 실패했습니다.');
       }
     },
     onError: (err) => {
       console.error(err);
+      toast.error('로그인에 실패했습니다.');
     },
   });
 

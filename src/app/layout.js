@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={suit.className}>
         <GoogleOAuthProvider
-          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
+          clientId="490381879-9976i94b3vvu2pabjttjgma8hscajrin.apps.googleusercontent.com">
           {children}
           <ToastContainer />
         </GoogleOAuthProvider>
