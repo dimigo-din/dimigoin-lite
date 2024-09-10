@@ -2,12 +2,6 @@
 
 import Box from '@/components/widgets/Box';
 import { useLaundryData } from '@/hooks/useLaundryData';
-import React from 'react';
-
-const CURRENT_USER = {
-  studentId: '2610',
-  name: '서승표',
-};
 
 const OptionButton = ({ text, isSelected, onClick }) => {
   return (
@@ -26,7 +20,7 @@ const OptionButton = ({ text, isSelected, onClick }) => {
   );
 };
 
-const LaundryTimeItem = ({ time, status, user, onSelect, index, isLoading }) => {
+const LaundryTimeItem = ({ time, status, user, onSelect, index, isLoading, currentUser }) => {
   let buttonClass =
     'w-full flex flex-row items-center px-spacing-500 py-spacing-300 rounded-radius-300 gap-spacing-300 border ';
   let textClass = '';
@@ -37,7 +31,7 @@ const LaundryTimeItem = ({ time, status, user, onSelect, index, isLoading }) => 
       textClass = 'text-content-standard-secondary';
       break;
     case 'reserved':
-      if (user === `${CURRENT_USER.studentId} ${CURRENT_USER.name}`) {
+      if (user === `${currentUser.studentId} ${currentUser.name}`) {
         buttonClass += 'bg-core-accent border-core-accent cursor-pointer';
         textClass = 'text-content-inverted-primary';
       } else {
@@ -52,7 +46,7 @@ const LaundryTimeItem = ({ time, status, user, onSelect, index, isLoading }) => 
       type="button"
       className={`${buttonClass} ${isLoading ? 'opacity-50' : ''}`}
       onClick={() => onSelect(index)}
-      disabled={isLoading || (status === 'reserved' && user !== `${CURRENT_USER.studentId} ${CURRENT_USER.name}`)}>
+      disabled={isLoading || (status === 'reserved' && user !== `${currentUser.studentId} ${currentUser.name}`)}>
       <span className={`text-footnote ${textClass} flex-shrink-0`}>{`${index + 1}타임`}</span>
       <strong className={`${textClass} text-label w-full text-left`}>
         {isLoading ? '로딩 중...' : status === 'available' ? '예약 가능' : user}
@@ -71,6 +65,7 @@ export default function LaundryApply() {
     handleTimetableChange,
     handleTimeSelect,
     isTimeSlotReservedByCurrentUser,
+    currentUser,
   } = useLaundryData();
 
   const renderContent = () => {
@@ -78,7 +73,7 @@ export default function LaundryApply() {
       return <div className="flex justify-center items-center h-40">로딩 중...</div>;
     }
 
-    if (!laundryData || !selectedTimetable) {
+    if (!laundryData || !selectedTimetable || !currentUser) {
       return <div className="flex justify-center items-center h-40">데이터를 불러올 수 없습니다.</div>;
     }
 
@@ -114,6 +109,7 @@ export default function LaundryApply() {
                 onSelect={() => handleTimeSelect(index)}
                 index={index}
                 isLoading={loadingTimeSlots[index]}
+                currentUser={currentUser}
               />
             );
           })}
