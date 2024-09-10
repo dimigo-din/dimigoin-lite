@@ -3,8 +3,6 @@
 import Box from '@/components/widgets/Box';
 import { useLaundryData } from '@/hooks/useLaundryData';
 import React from 'react';
-import Swal from 'sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css';
 
 const CURRENT_USER = {
   studentId: '2610',

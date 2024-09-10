@@ -1,5 +1,6 @@
 import axiosInstance from '@/lib/axios';
 import { jwtDecode } from 'jwt-decode';
+import Swal from 'sweetalert2';
 import { getRefreshToken, removeJWTCookie, removeRefreshToken, setJWTCookie, setRefreshToken } from './cookie';
 
 const storeUserData = (token) => {
@@ -23,14 +24,29 @@ const storeUserData = (token) => {
 };
 
 export const logout = async () => {
-  await axiosInstance.post('/auth/logout', {
-    token: getRefreshToken(),
+  const result = await Swal.fire({
+    title: '로그아웃',
+    text: '정말로 로그아웃 하시겠습니까?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '예, 로그아웃합니다',
+    cancelButtonText: '아니오',
   });
-  removeJWTCookie();
-  removeRefreshToken();
-  removeUserData();
 
-  window.location.href = '/login';
+  if (result.isConfirmed) {
+    try {
+      await axiosInstance.post('/auth/logout', {
+        token: getRefreshToken(),
+      });
+      removeJWTCookie();
+      removeRefreshToken();
+      removeUserData();
+
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  }
 };
 
 export const googleLogin = async (code) => {

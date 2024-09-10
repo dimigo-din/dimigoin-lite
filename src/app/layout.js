@@ -1,9 +1,10 @@
 import './globals.css';
 import localFont from 'next/font/local';
 import 'react-material-symbols/rounded';
-import "react-toastify/ReactToastify.css";
+import 'react-toastify/ReactToastify.css';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import {ToastContainer} from "react-toastify";
+import { ToastContainer } from 'react-toastify';
 
 const suit = localFont({
   src: [
@@ -34,8 +35,7 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090A" />
       </head>
       <body className={suit.className}>
-        <GoogleOAuthProvider
-          clientId="490381879-9976i94b3vvu2pabjttjgma8hscajrin.apps.googleusercontent.com">
+        <GoogleOAuthProvider clientId="490381879-9976i94b3vvu2pabjttjgma8hscajrin.apps.googleusercontent.com">
           {children}
           <ToastContainer />
         </GoogleOAuthProvider>

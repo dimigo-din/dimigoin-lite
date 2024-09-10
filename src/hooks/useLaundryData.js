@@ -65,8 +65,6 @@ export const useLaundryData = () => {
           text: '정말로 예약을 취소하시겠습니까?',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
           confirmButtonText: '예, 취소합니다',
           cancelButtonText: '아니오',
         });

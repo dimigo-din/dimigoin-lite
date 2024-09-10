@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { MaterialSymbol } from 'react-material-symbols';
 
-export default function Box({ title, description, children, isExpandable = true, defaultExpanded = true }) {
+export default function Box({ title, description, children, isExpandable = false, defaultExpanded = false }) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   const toggleExpand = () => {
