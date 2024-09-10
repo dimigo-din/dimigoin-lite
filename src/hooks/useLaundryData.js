@@ -1,17 +1,24 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getLaundryData, applyLaundry, cancelLaundry } from "@/service/laundry";
+import { getUserData } from '@/service/auth';
+import { applyLaundry, cancelLaundry, getLaundryData } from '@/service/laundry';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-
-const CURRENT_USER = {
-  studentId: '2610',
-  name: '서승표',
-};
 
 export const useLaundryData = () => {
   const [laundryData, setLaundryData] = useState(null);
   const [selectedTimetable, setSelectedTimetable] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingTimeSlots, setLoadingTimeSlots] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const userData = getUserData();
+    if (userData) {
+      setCurrentUser({
+        studentId: `${userData.grade}${userData.class}${userData.number.toString().padStart(2, '0')}`,
+        name: userData.name,
+      });
+    }
+  }, []);
 
   const fetchLaundryData = useCallback(async (showLoading = true) => {
     try {
@@ -21,9 +28,9 @@ export const useLaundryData = () => {
       const data = await getLaundryData();
       setLaundryData(data);
       if (data.timetables.length > 0) {
-        setSelectedTimetable(prevSelected => {
+        setSelectedTimetable((prevSelected) => {
           if (prevSelected) {
-            return data.timetables.find(t => t._id === prevSelected._id) || data.timetables[0];
+            return data.timetables.find((t) => t._id === prevSelected._id) || data.timetables[0];
           }
           return data.timetables[0];
         });
@@ -46,9 +53,9 @@ export const useLaundryData = () => {
   };
 
   const handleTimeSelect = async (timeIndex) => {
-    if (!selectedTimetable) return;
+    if (!selectedTimetable || !currentUser) return;
 
-    setLoadingTimeSlots(prev => ({ ...prev, [timeIndex]: true }));
+    setLoadingTimeSlots((prev) => ({ ...prev, [timeIndex]: true }));
 
     try {
       if (isTimeSlotReservedByCurrentUser(timeIndex)) {
@@ -63,16 +70,15 @@ export const useLaundryData = () => {
     } catch (err) {
       toast.error(err.message || '예약 변경에 실패했습니다.');
     } finally {
-      setLoadingTimeSlots(prev => ({ ...prev, [timeIndex]: false }));
+      setLoadingTimeSlots((prev) => ({ ...prev, [timeIndex]: false }));
     }
   };
 
   const isTimeSlotReservedByCurrentUser = (timeIndex) => {
-    if (!laundryData || !selectedTimetable) return false;
-    const application = laundryData.applications.find(app =>
-      app.timetable._id === selectedTimetable._id &&
-      app.student.name === CURRENT_USER.name &&
-      app.time === timeIndex
+    if (!laundryData || !selectedTimetable || !currentUser) return false;
+    const application = laundryData.applications.find(
+      (app) =>
+        app.timetable._id === selectedTimetable._id && app.student.name === currentUser.name && app.time === timeIndex,
     );
     return !!application;
   };
@@ -86,5 +92,6 @@ export const useLaundryData = () => {
     handleTimeSelect,
     isTimeSlotReservedByCurrentUser,
     refreshData: fetchLaundryData,
+    currentUser,
   };
 };

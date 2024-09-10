@@ -1,5 +1,26 @@
 import axiosInstance from '@/lib/axios';
-import { setJWTCookie, removeJWTCookie, setRefreshToken, getRefreshToken, removeRefreshToken } from './cookie';
+import { jwtDecode } from 'jwt-decode';
+import { getRefreshToken, removeJWTCookie, removeRefreshToken, setJWTCookie, setRefreshToken } from './cookie';
+
+const storeUserData = (token) => {
+  try {
+    const decodedToken = jwtDecode(token);
+    const userData = {
+      _id: decodedToken._id,
+      name: decodedToken.name,
+      email: decodedToken.email,
+      grade: decodedToken.grade,
+      class: decodedToken.class,
+      number: decodedToken.number,
+      gender: decodedToken.gender,
+      permissions: decodedToken.permissions,
+      groups: decodedToken.groups,
+    };
+    localStorage.setItem('userData', JSON.stringify(userData));
+  } catch (error) {
+    console.error('Error decoding or storing user data:', error);
+  }
+};
 
 export const logout = async () => {
   await axiosInstance.post('/auth/logout', {
@@ -7,6 +28,8 @@ export const logout = async () => {
   });
   removeJWTCookie();
   removeRefreshToken();
+  removeUserData();
+
   window.location.href = '/login';
 };
 
@@ -17,6 +40,7 @@ export const googleLogin = async (code) => {
     });
     setJWTCookie(data.accessToken);
     setRefreshToken(data.refreshToken);
+    storeUserData(data.accessToken);
     return data;
   } catch (error) {
     console.error('Login error:', error);
@@ -32,11 +56,22 @@ export const refreshJWT = async () => {
     });
     setJWTCookie(data.accessToken);
     setRefreshToken(data.refreshToken);
+    storeUserData(data.accessToken);
     return data;
   } catch (error) {
     console.error('Refresh token error:', error);
     removeJWTCookie();
     removeRefreshToken();
+    localStorage.removeItem('userData');
     throw error;
   }
+};
+
+export const getUserData = () => {
+  const userData = localStorage.getItem('userData');
+  return userData ? JSON.parse(userData) : null;
+};
+
+export const removeUserData = () => {
+  localStorage.removeItem('userData');
 };

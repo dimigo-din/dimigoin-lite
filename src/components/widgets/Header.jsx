@@ -1,33 +1,16 @@
 'use client';
 
+import { getUserData, logout } from '@/service/auth';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { logout } from '@/service/auth';
-import { getJWTCookie } from '@/service/cookie';
-import {toast} from "react-toastify";
-
-function parseJwt(token) {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  const jsonPayload = decodeURIComponent(
-    window
-      .atob(base64)
-      .split('')
-      .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
-      .join(''),
-  );
-
-  return JSON.parse(jsonPayload);
-}
+import { useEffect, useState } from 'react';
 
 export default function Header({ isForSpace = false }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const accessToken = getJWTCookie();
-    if (accessToken) {
-      const userData = parseJwt(accessToken);
+    const userData = getUserData();
+    if (userData) {
       setUser(userData);
     }
   }, []);
@@ -51,7 +34,10 @@ export default function Header({ isForSpace = false }) {
           </span>
         </Link>
         <div className="flex flex-row gap-spacing-400 items-center">
-          <span className="text-footnote text-content-standard-tertiary cursor-pointer" onClick={logout} onKeyDown={logout}>
+          <span
+            className="text-footnote text-content-standard-tertiary cursor-pointer"
+            onClick={logout}
+            onKeyDown={(e) => e.key === 'Enter' && logout()}>
             로그아웃
           </span>
           {user ? (

@@ -1,13 +1,15 @@
-import { Cookies } from "react-cookie";
+import { Cookies } from 'react-cookie';
 
 const cookies = new Cookies();
 
 export const setJWTCookie = (token, options = {}) => {
+  const oneDay = 24 * 60 * 60 * 1000 * 30;
   return cookies.set('jwt', token, {
     secure: true,
     sameSite: 'strict',
-    path: "/",
-    ...options
+    path: '/',
+    expires: new Date(Date.now() + oneDay),
+    ...options,
   });
 };
 
@@ -16,7 +18,7 @@ export const getJWTCookie = () => {
 };
 
 export const removeJWTCookie = () => {
-  return cookies.remove('jwt', { path: "/" });
+  return cookies.remove('jwt', { path: '/' });
 };
 
 export const setRefreshToken = (token) => {
