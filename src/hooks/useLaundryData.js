@@ -2,6 +2,7 @@ import { getUserData } from '@/service/auth';
 import { applyLaundry, cancelLaundry, getLaundryData } from '@/service/laundry';
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 export const useLaundryData = () => {
   const [laundryData, setLaundryData] = useState(null);
@@ -59,14 +60,27 @@ export const useLaundryData = () => {
 
     try {
       if (isTimeSlotReservedByCurrentUser(timeIndex)) {
-        await cancelLaundry();
-        toast.success('예약이 취소되었습니다.');
+        const result = await Swal.fire({
+          title: '예약 취소',
+          text: '정말로 예약을 취소하시겠습니까?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: '예, 취소합니다',
+          cancelButtonText: '아니오',
+        });
+
+        if (result.isConfirmed) {
+          await cancelLaundry();
+          toast.success('예약이 취소되었습니다.');
+          await fetchLaundryData(false);
+        }
       } else {
         await applyLaundry(selectedTimetable.laundry._id, timeIndex);
         toast.success('예약이 완료되었습니다.');
+        await fetchLaundryData(false);
       }
-
-      await fetchLaundryData(false);
     } catch (err) {
       toast.error(err.message || '예약 변경에 실패했습니다.');
     } finally {

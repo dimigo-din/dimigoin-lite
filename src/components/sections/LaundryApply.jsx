@@ -1,8 +1,10 @@
 'use client';
 
 import Box from '@/components/widgets/Box';
-import React from 'react';
 import { useLaundryData } from '@/hooks/useLaundryData';
+import React from 'react';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const CURRENT_USER = {
   studentId: '2610',
@@ -98,15 +100,19 @@ export default function LaundryApply() {
         </div>
         <div className="flex flex-col gap-spacing-300">
           {selectedTimetable.sequence.map((time, index) => {
-            const application = laundryData.applications.find(app =>
-              app.timetable._id === selectedTimetable._id && app.time === index
+            const application = laundryData.applications.find(
+              (app) => app.timetable._id === selectedTimetable._id && app.time === index,
             );
             return (
               <LaundryTimeItem
                 key={index}
                 time={time}
                 status={application ? 'reserved' : 'available'}
-                user={application ? `${application.student.grade}${application.student.class}${application.student.number.toString().padStart(2, '0')} ${application.student.name}` : undefined}
+                user={
+                  application
+                    ? `${application.student.grade}${application.student.class}${application.student.number.toString().padStart(2, '0')} ${application.student.name}`
+                    : undefined
+                }
                 onSelect={() => handleTimeSelect(index)}
                 index={index}
                 isLoading={loadingTimeSlots[index]}
@@ -120,9 +126,7 @@ export default function LaundryApply() {
 
   return (
     <Box title="세탁 신청" description="세탁기 및 건조기를 신청해주세요.">
-      <div className="flex flex-col gap-spacing-400 w-full">
-        {renderContent()}
-      </div>
+      <div className="flex flex-col gap-spacing-400 w-full">{renderContent()}</div>
     </Box>
   );
 }
