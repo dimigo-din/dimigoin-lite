@@ -7,12 +7,17 @@ import { useEffect, useState } from 'react';
 
 export default function Header({ isForSpace = false }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const userData = getUserData();
-    if (userData) {
-      setUser(userData);
-    }
+    const fetchUserData = async () => {
+      const userData = await getUserData();
+      if (userData) {
+        setUser(userData);
+      }
+      setLoading(false);
+    };
+    fetchUserData();
   }, []);
 
   const headerClasses = isForSpace
@@ -22,6 +27,17 @@ export default function Header({ isForSpace = false }) {
   const formatUserInfo = (user) => {
     if (!user) return '';
     return `${user.grade}${user.class}${user.number.toString().padStart(2, '0')} ${user.name}`;
+  };
+
+  const renderUserInfo = () => {
+    if (loading) {
+      return <div className="h-[24px] w-[80px] bg-background-standard-tertiary rounded animate-pulse" />;
+    }
+    return user ? (
+      <strong className="text-body text-content-standard-primary">{formatUserInfo(user)}</strong>
+    ) : (
+      <span className="text-body text-content-standard-tertiary">로그인 필요</span>
+    );
   };
 
   return (
@@ -40,11 +56,7 @@ export default function Header({ isForSpace = false }) {
             onKeyDown={(e) => e.key === 'Enter' && logout()}>
             로그아웃
           </span>
-          {user ? (
-            <strong className="text-body text-content-standard-primary">{formatUserInfo(user)}</strong>
-          ) : (
-            <span className="text-body text-content-standard-tertiary">로딩 중...</span>
-          )}
+          {renderUserInfo()}
         </div>
       </div>
     </div>

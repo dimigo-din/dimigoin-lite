@@ -72,16 +72,19 @@ export const useLaundryData = () => {
         if (result.isConfirmed) {
           await cancelLaundry();
           toast.success('예약이 취소되었습니다.');
-          await fetchLaundryData(false);
+        } else {
+          return;
         }
       } else {
         await applyLaundry(selectedTimetable.laundry._id, timeIndex);
         toast.success('예약이 완료되었습니다.');
-        await fetchLaundryData(false);
       }
+
+      await fetchLaundryData(false);
     } catch (err) {
       toast.error(err.message || '예약 변경에 실패했습니다.');
     } finally {
+      await fetchLaundryData(false);
       setLoadingTimeSlots((prev) => ({ ...prev, [timeIndex]: false }));
     }
   };

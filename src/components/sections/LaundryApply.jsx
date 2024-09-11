@@ -2,6 +2,7 @@
 
 import Box from '@/components/widgets/Box';
 import { useLaundryData } from '@/hooks/useLaundryData';
+import React from 'react';
 
 const OptionButton = ({ text, isSelected, onClick }) => {
   return (
@@ -56,7 +57,18 @@ const LaundryTimeItem = ({ time, status, user, onSelect, index, isLoading, curre
   );
 };
 
-export default function LaundryApply() {
+const SkeletonLoader = () => (
+  <div className="flex flex-col gap-spacing-400 w-full animate-pulse">
+    <div className="w-full h-[48px] bg-background-standard-secondary rounded-radius-400" />
+    <div className="flex flex-col gap-spacing-300">
+      {[...Array(5)].map((_, index) => (
+        <div key={index} className="w-full h-[48px] bg-background-standard-secondary rounded-radius-300" />
+      ))}
+    </div>
+  </div>
+);
+
+export default function LaundryApply({ refreshMyStatus }) {
   const {
     laundryData,
     selectedTimetable,
@@ -64,16 +76,20 @@ export default function LaundryApply() {
     loadingTimeSlots,
     handleTimetableChange,
     handleTimeSelect,
-    isTimeSlotReservedByCurrentUser,
     currentUser,
   } = useLaundryData();
 
+  const handleTimeSelectAndRefresh = async (index) => {
+    await handleTimeSelect(index);
+    refreshMyStatus();
+  };
+
   const renderContent = () => {
     if (loading) {
-      return <div className="flex justify-center items-center h-40">로딩 중...</div>;
+      return <SkeletonLoader />;
     }
 
-    if (!laundryData || !selectedTimetable || !currentUser) {
+    if (!laundryData || !selectedTimetable) {
       return <div className="flex justify-center items-center h-40">데이터를 불러올 수 없습니다.</div>;
     }
 
@@ -106,7 +122,7 @@ export default function LaundryApply() {
                     ? `${application.student.grade}${application.student.class}${application.student.number.toString().padStart(2, '0')} ${application.student.name}`
                     : undefined
                 }
-                onSelect={() => handleTimeSelect(index)}
+                onSelect={() => handleTimeSelectAndRefresh(index)}
                 index={index}
                 isLoading={loadingTimeSlots[index]}
                 currentUser={currentUser}
