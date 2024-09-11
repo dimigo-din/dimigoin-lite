@@ -1,114 +1,9 @@
 'use client';
 
 import Box from '@/components/widgets/Box';
-import React, { useState, useCallback, useEffect } from 'react';
+import { useStayApplication } from '@/hooks/useStayApplication';
+import React, { useState } from 'react';
 import { MaterialSymbol } from 'react-material-symbols';
-
-const CURRENT_USER = {
-  studentId: '2209',
-  name: '김진욱',
-};
-
-const RESERVED_SEATS = {
-  A1: { studentId: '2201', name: '김민수' },
-  A2: { studentId: '2202', name: '박지훈' },
-  A3: { studentId: '2203', name: '이승현' },
-  A4: { studentId: '2204', name: '김진우' },
-  A5: { studentId: '2205', name: '이승민' },
-};
-
-const AVAILABLE_SEATS = [
-  'A1',
-  'A2',
-  'A3',
-  'A4',
-  'A5',
-  'A6',
-  'A7',
-  'A8',
-  'A9',
-  'A10',
-  'A11',
-  'A12',
-  'A13',
-  'A14',
-  'A15',
-  'A16',
-  'A17',
-  'A18',
-  'B1',
-  'B2',
-  'B3',
-  'B4',
-  'B5',
-  'B6',
-  'B7',
-  'B8',
-  'B9',
-  'B10',
-  'B11',
-  'B12',
-  'B13',
-  'B14',
-  'B15',
-  'B16',
-  'B17',
-  'B18',
-  'C1',
-  'C2',
-  'C3',
-  'C4',
-  'C5',
-  'C6',
-  'C7',
-  'C8',
-  'C9',
-  'C10',
-  'C11',
-  'C12',
-  'C13',
-  'C14',
-  'C15',
-  'C16',
-  'C17',
-  'C18',
-  'D1',
-  'D2',
-  'D3',
-  'D4',
-  'D5',
-  'D6',
-  'D7',
-  'D8',
-  'D9',
-  'D10',
-  'D11',
-  'D12',
-  'D13',
-  'D14',
-  'D15',
-  'D16',
-  'D17',
-  'D18',
-  'E1',
-  'E2',
-  'E3',
-  'E4',
-  'E5',
-  'E6',
-  'E7',
-  'E8',
-  'E9',
-  'E10',
-  'E11',
-  'E12',
-  'E13',
-  'E14',
-  'E15',
-  'E16',
-  'E17',
-  'E18',
-];
 
 const GuideText = ({ text }) => (
   <div className="w-[40px] h-[30px] rounded-radius-100 flex justify-center items-center">
@@ -116,19 +11,30 @@ const GuideText = ({ text }) => (
   </div>
 );
 
-const Seat = ({ type, studentId, name, coordinate, onClick }) => {
+const SkeletonLoader = () => (
+  <div className="w-full h-[200px] md:h-[400px] md:w-[500px] bg-background-standard-secondary rounded animate-pulse" />
+);
+
+const SkeletonButton = () => (
+  <div className="w-full h-[44px] bg-background-standard-secondary rounded-radius-200 animate-pulse" />
+);
+
+const SkeletonTextInput = () => (
+  <div className="w-full h-[36px] bg-background-standard-secondary rounded-radius-200 animate-pulse" />
+);
+
+const Seat = ({ type, studentId, name, coordinate, onClick, isSelectable }) => {
   const baseClasses = 'w-[40px] h-[30px] rounded-radius-100 flex justify-center items-center';
   const contentClasses = 'text-[10px] leading-[10px] text-center';
 
   const seatTypes = {
     reserved: `${baseClasses} bg-core-accent-translucent cursor-not-allowed`,
     selected: `${baseClasses} bg-core-accent cursor-pointer`,
-    available: `${baseClasses} bg-background-standard-secondary border border-core-accent-secondary cursor-pointer`,
-    unavailable: `${baseClasses} bg-components-translucent-secondary cursor-not-allowed`,
+    available: `${baseClasses} ${isSelectable ? 'bg-background-standard-secondary border border-core-accent-secondary cursor-pointer' : 'bg-components-translucent-secondary cursor-not-allowed'}`,
   };
 
   const handleInteraction = () => {
-    if (type === 'available' || type === 'selected') {
+    if ((type === 'available' && isSelectable) || type === 'selected') {
       onClick(coordinate);
     }
   };
@@ -143,58 +49,66 @@ const Seat = ({ type, studentId, name, coordinate, onClick }) => {
           handleInteraction();
         }
       }}
-      role={type === 'available' || type === 'selected' ? 'button' : 'presentation'}
-      tabIndex={type === 'available' || type === 'selected' ? 0 : -1}
+      role={(type === 'available' && isSelectable) || type === 'selected' ? 'button' : 'presentation'}
+      tabIndex={(type === 'available' && isSelectable) || type === 'selected' ? 0 : -1}
       aria-pressed={type === 'selected'}>
       {type === 'available' ? (
-        <span className={`${contentClasses} text-content-standard-tertiary`}>{coordinate}</span>
-      ) : type !== 'unavailable' ? (
+        <span
+          className={`${contentClasses} ${isSelectable ? 'text-content-standard-tertiary' : 'text-content-standard-quaternary'}`}>
+          {coordinate}
+        </span>
+      ) : (
         <span
           className={`${contentClasses} ${type === 'selected' ? 'text-content-inverted-primary' : 'text-content-standard-primary'}`}>
           {studentId}
           <br />
           {name}
         </span>
-      ) : null}
+      )}
     </div>
   );
 };
 
-const SeatPair = ({ row, col, selectedSeat, onSeatSelect }) => {
-  const generateSeat = useCallback(
+const SeatPair = ({ row, col, selectedSeat, reservedSeats, currentUser, onSeatSelect, selectableSeats }) => {
+  const generateSeat = React.useCallback(
     (seatRow, seatCol) => {
       const coordinate = `${seatRow}${seatCol}`;
+      const isSelectable = selectableSeats.includes(coordinate);
+
       if (selectedSeat === coordinate) {
         return (
           <Seat
             type="selected"
-            studentId={CURRENT_USER.studentId}
-            name={CURRENT_USER.name}
+            studentId={
+              currentUser.grade.toString() +
+              currentUser.class.toString().padStart(2, '0') +
+              currentUser.number.toString().padStart(2, '0')
+            }
+            name={currentUser.name}
             coordinate={coordinate}
             onClick={onSeatSelect}
+            isSelectable={true}
           />
         );
       }
 
-      if (RESERVED_SEATS[coordinate]) {
+      const reservedSeat = reservedSeats.find((seat) => seat.coordinate === coordinate);
+      if (reservedSeat) {
         return (
           <Seat
             type="reserved"
-            studentId={RESERVED_SEATS[coordinate].studentId}
-            name={RESERVED_SEATS[coordinate].name}
+            studentId={reservedSeat.studentId}
+            name={reservedSeat.name}
             coordinate={coordinate}
             onClick={onSeatSelect}
+            isSelectable={false}
           />
         );
       }
 
-      if (AVAILABLE_SEATS.includes(coordinate)) {
-        return <Seat type="available" coordinate={coordinate} onClick={onSeatSelect} />;
-      }
-
-      return <Seat type="unavailable" coordinate={coordinate} onClick={onSeatSelect} />;
+      return <Seat type="available" coordinate={coordinate} onClick={onSeatSelect} isSelectable={isSelectable} />;
     },
-    [selectedSeat, onSeatSelect],
+    [selectedSeat, reservedSeats, currentUser, onSeatSelect, selectableSeats],
   );
 
   return (
@@ -205,7 +119,7 @@ const SeatPair = ({ row, col, selectedSeat, onSeatSelect }) => {
   );
 };
 
-const Seats = ({ selectedSeat, onSeatSelect }) => {
+const Seats = ({ selectedSeat, reservedSeats, currentUser, onSeatSelect, selectableSeats }) => {
   const rows = ['A', 'C', 'E', 'G', 'I', 'K', 'M'];
   const leftCols = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
   const rightCols = ['10', '11', '12', '13', '14', '15', '16', '17', '18'];
@@ -235,7 +149,16 @@ const Seats = ({ selectedSeat, onSeatSelect }) => {
             </div>
             <div className="flex flex-row gap-spacing-150">
               {leftCols.map((col) => (
-                <SeatPair key={col} row="A" col={col} selectedSeat={selectedSeat} onSeatSelect={onSeatSelect} />
+                <SeatPair
+                  key={col}
+                  row="A"
+                  col={col}
+                  selectedSeat={selectedSeat}
+                  reservedSeats={reservedSeats}
+                  currentUser={currentUser}
+                  onSeatSelect={onSeatSelect}
+                  selectableSeats={selectableSeats}
+                />
               ))}
             </div>
           </div>
@@ -243,7 +166,16 @@ const Seats = ({ selectedSeat, onSeatSelect }) => {
             <div key={row} className="flex flex-col gap-spacing-150">
               <div className="flex flex-row gap-spacing-150">
                 {leftCols.map((col) => (
-                  <SeatPair key={col} row={row} col={col} selectedSeat={selectedSeat} onSeatSelect={onSeatSelect} />
+                  <SeatPair
+                    key={col}
+                    row={row}
+                    col={col}
+                    selectedSeat={selectedSeat}
+                    reservedSeats={reservedSeats}
+                    currentUser={currentUser}
+                    onSeatSelect={onSeatSelect}
+                    selectableSeats={selectableSeats}
+                  />
                 ))}
               </div>
             </div>
@@ -259,7 +191,16 @@ const Seats = ({ selectedSeat, onSeatSelect }) => {
           </div>
           <div className="flex flex-row gap-spacing-150">
             {rightCols.map((col) => (
-              <SeatPair key={col} row="A" col={col} selectedSeat={selectedSeat} onSeatSelect={onSeatSelect} />
+              <SeatPair
+                key={col}
+                row="A"
+                col={col}
+                selectedSeat={selectedSeat}
+                reservedSeats={reservedSeats}
+                currentUser={currentUser}
+                onSeatSelect={onSeatSelect}
+                selectableSeats={selectableSeats}
+              />
             ))}
           </div>
         </div>
@@ -267,7 +208,16 @@ const Seats = ({ selectedSeat, onSeatSelect }) => {
           <div key={row} className="flex flex-col gap-spacing-150">
             <div className="flex flex-row gap-spacing-150">
               {rightCols.map((col) => (
-                <SeatPair key={col} row={row} col={col} selectedSeat={selectedSeat} onSeatSelect={onSeatSelect} />
+                <SeatPair
+                  key={col}
+                  row={row}
+                  col={col}
+                  selectedSeat={selectedSeat}
+                  reservedSeats={reservedSeats}
+                  currentUser={currentUser}
+                  onSeatSelect={onSeatSelect}
+                  selectableSeats={selectableSeats}
+                />
               ))}
             </div>
           </div>
@@ -328,43 +278,51 @@ const Modal = ({ isOpen, onClose, children }) => {
   );
 };
 
-export default function StayApply() {
-  const [selectedSeat, setSelectedSeat] = useState('NONE');
-  const [unselectedReason, setUnselectedReason] = useState('');
+export default function StayApply({ refreshMyStatus }) {
+  const {
+    selectedSeat,
+    unselectedReason,
+    currentUser,
+    reservedSeats,
+    selectableSeats,
+    loading,
+    error,
+    hasExistingApplication,
+    handleSeatSelect,
+    handleUnselectedReasonChange,
+    handleSubmit,
+  } = useStayApplication(refreshMyStatus); // refreshMyStatus를 인자로 전달
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleSeatSelect = useCallback((coordinate) => {
-    setSelectedSeat((prevSeat) => (prevSeat === coordinate ? 'NONE' : coordinate));
-  }, []);
-
-  const handleUnselectedReasonChange = (e) => {
-    setUnselectedReason(e.target.value);
-  };
-
-  useEffect(() => {
-    if (selectedSeat !== 'NONE') {
-      setUnselectedReason('');
-    }
-  }, [selectedSeat]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(
-      `신청된 좌석: ${selectedSeat}\n미선택 사유: ${unselectedReason}\n학번: ${CURRENT_USER.studentId}\n이름: ${CURRENT_USER.name}`,
-    );
-  };
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
-    <Box title="잔류 신청" description="원하시는 잔류 좌석을 선택해주세요.">
+    <Box
+      title="잔류 신청"
+      description={hasExistingApplication ? '현재 잔류 신청 현황입니다.' : '원하시는 잔류 좌석을 선택해주세요.'}>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col md:flex-row justify-start items-start w-full gap-spacing-700">
         <div className="w-full flex flex-col justify-end items-end gap-spacing-200">
           <div className="w-full h-[200px] md:h-[400px] md:w-[500px] overflow-auto flex-shrink-0">
-            <Seats selectedSeat={selectedSeat} onSeatSelect={handleSeatSelect} />
+            {loading ? (
+              <SkeletonLoader />
+            ) : (
+              <Seats
+                selectedSeat={selectedSeat}
+                reservedSeats={reservedSeats}
+                currentUser={currentUser}
+                onSeatSelect={handleSeatSelect}
+                selectableSeats={selectableSeats}
+                isSelectable={!hasExistingApplication}
+              />
+            )}
           </div>
           <div
             className="flex flex-row gap-spacing-100 justify-center items-center cursor-pointer"
@@ -384,32 +342,62 @@ export default function StayApply() {
               color="bg-background-standard-secondary border border-core-accent-secondary"
               text="선택 가능한 자리"
             />
-            <LegendItem color="bg-components-translucent-secondary" text="선택 불가한 자리" />
+            <LegendItem color="bg-components-translucent-secondary" text="선택 불가능한자리" />
           </div>
           <div className="w-full flex flex-col justify-start items-start gap-spacing-200">
             <strong className="text-label">좌석 선택</strong>
-            <div className="w-full flex flex-row justify-start items-center gap-spacing-200">
-              <span className="text-footnote text-content-standard-tertiary">내가 선택한 좌석</span>
-              <strong className="text-label text-core-accent">
-                {selectedSeat === 'NONE' ? '미선택' : selectedSeat}
-              </strong>
-            </div>
-            <TextInput
-              value={unselectedReason}
-              onChange={handleUnselectedReasonChange}
-              placeholder="미선택 사유를 입력해주세요"
-              disabled={selectedSeat !== 'NONE'}
-              required={selectedSeat === 'NONE'}
-            />
-            <Button type="submit" primary>
-              <span className="text-center w-full">잔류 신청하기</span>
-            </Button>
+            {loading ? (
+              <>
+                <div className="w-full flex flex-row justify-start items-center gap-spacing-200">
+                  <div className="w-[80px] h-[20px] bg-background-standard-secondary rounded animate-pulse" />
+                  <div className="w-[36px] h-[22px] bg-background-standard-secondary rounded animate-pulse" />
+                </div>
+                <SkeletonTextInput />
+                <SkeletonButton />
+              </>
+            ) : (
+              <>
+                <div className="w-full flex flex-row justify-start items-center gap-spacing-200">
+                  <span className="text-footnote text-content-standard-tertiary">
+                    {hasExistingApplication ? '신청된 좌석' : '내가 선택한 좌석'}
+                  </span>
+                  <strong className="text-label text-core-accent">
+                    {selectedSeat === null ? '미선택' : selectedSeat}{' '}
+                  </strong>
+                </div>
+                {!hasExistingApplication && (
+                  <TextInput
+                    value={unselectedReason}
+                    onChange={handleUnselectedReasonChange}
+                    placeholder="미선택 사유를 입력해주세요"
+                    disabled={selectedSeat !== null}
+                    required={selectedSeat === null}
+                  />
+                )}
+                <Button type="submit" primary>
+                  <span className="text-center w-full">
+                    {hasExistingApplication ? '잔류 신청 취소하기' : '잔류 신청하기'}
+                  </span>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </form>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <div className="w-full h-full overflow-auto">
-          <Seats selectedSeat={selectedSeat} onSeatSelect={handleSeatSelect} />
+          {loading ? (
+            <SkeletonLoader />
+          ) : (
+            <Seats
+              selectedSeat={selectedSeat}
+              reservedSeats={reservedSeats}
+              currentUser={currentUser}
+              onSeatSelect={handleSeatSelect}
+              selectableSeats={selectableSeats}
+              isSelectable={!hasExistingApplication}
+            />
+          )}
         </div>
       </Modal>
     </Box>

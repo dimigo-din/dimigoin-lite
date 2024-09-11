@@ -55,7 +55,7 @@ export default function MyStatus() {
         {isLoading ? <SkeletonLoader /> : renderStatusItems()}
       </Box>
       <LaundryApply refreshMyStatus={refreshStatus} />
-      <StayApply />
+      <StayApply refreshMyStatus={refreshStatus} />
       <StayOutgoApply />
       <FrigoApply />
     </>

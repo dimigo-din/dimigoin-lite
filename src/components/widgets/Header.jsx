@@ -22,7 +22,7 @@ export default function Header({ isForSpace = false }) {
 
   const headerClasses = isForSpace
     ? 'w-full flex justify-center items-center opacity-0'
-    : 'fixed top-0 left-0 w-full flex justify-center items-center bg-background-standard-secondary[0.2] backdrop-blur';
+    : 'z-50 fixed top-0 left-0 w-full flex justify-center items-center bg-background-standard-secondary[0.2] backdrop-blur';
 
   const formatUserInfo = (user) => {
     if (!user) return '';

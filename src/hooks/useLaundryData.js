@@ -79,8 +79,6 @@ export const useLaundryData = () => {
         await applyLaundry(selectedTimetable.laundry._id, timeIndex);
         toast.success('예약이 완료되었습니다.');
       }
-
-      await fetchLaundryData(false);
     } catch (err) {
       toast.error(err.message || '예약 변경에 실패했습니다.');
     } finally {
