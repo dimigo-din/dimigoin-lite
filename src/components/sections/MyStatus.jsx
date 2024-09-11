@@ -56,7 +56,6 @@ export default function MyStatus() {
       </Box>
       <LaundryApply refreshMyStatus={refreshStatus} />
       <StayApply refreshMyStatus={refreshStatus} />
-      <StayOutgoApply />
       <FrigoApply />
     </>
   );

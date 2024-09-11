@@ -1,5 +1,6 @@
 'use client';
 
+import StayOutgoApply from '@/components/sections/StayOutgoApply';
 import Box from '@/components/widgets/Box';
 import { useStayApplication } from '@/hooks/useStayApplication';
 import React, { useState } from 'react';
@@ -303,14 +304,90 @@ export default function StayApply({ refreshMyStatus }) {
   }
 
   return (
-    <Box
-      title="잔류 신청"
-      description={hasExistingApplication ? '현재 잔류 신청 현황입니다.' : '원하시는 잔류 좌석을 선택해주세요.'}>
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col md:flex-row justify-start items-start w-full gap-spacing-700">
-        <div className="w-full flex flex-col justify-end items-end gap-spacing-200">
-          <div className="w-full h-[200px] md:h-[400px] md:w-[500px] overflow-auto flex-shrink-0">
+    <>
+      <Box
+        title="잔류 신청"
+        description={hasExistingApplication ? '현재 잔류 신청 현황입니다.' : '원하시는 잔류 좌석을 선택해주세요.'}>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col md:flex-row justify-start items-start w-full gap-spacing-700">
+          <div className="w-full flex flex-col justify-end items-end gap-spacing-200">
+            <div className="w-full h-[200px] md:h-[400px] md:w-[500px] overflow-auto flex-shrink-0">
+              {loading ? (
+                <SkeletonLoader />
+              ) : (
+                <Seats
+                  selectedSeat={selectedSeat}
+                  reservedSeats={reservedSeats}
+                  currentUser={currentUser}
+                  onSeatSelect={handleSeatSelect}
+                  selectableSeats={selectableSeats}
+                  isSelectable={!hasExistingApplication}
+                />
+              )}
+            </div>
+            <div
+              className="flex flex-row gap-spacing-100 justify-center items-center cursor-pointer"
+              onClick={openModal}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && openModal()}>
+              <MaterialSymbol icon="fullscreen" size={16} weight={300} className="text-content-standard-tertiary" />
+              <strong className="text-label text-content-standard-tertiary">크게 보기</strong>
+            </div>
+          </div>
+          <div className="md:h-[430px] w-full flex flex-col justify-between items-start gap-spacing-700">
+            <div className="w-full flex flex-row flex-wrap md:flex-col justify-start items-start gap-spacing-200">
+              <LegendItem color="bg-core-accent-translucent" text="이미 신청된 자리" />
+              <LegendItem color="bg-core-accent" text="현재 선택한 자리" />
+              <LegendItem
+                color="bg-background-standard-secondary border border-core-accent-secondary"
+                text="선택 가능한 자리"
+              />
+              <LegendItem color="bg-components-translucent-secondary" text="선택 불가능한자리" />
+            </div>
+            <div className="w-full flex flex-col justify-start items-start gap-spacing-200">
+              <strong className="text-label">좌석 선택</strong>
+              {loading ? (
+                <>
+                  <div className="w-full flex flex-row justify-start items-center gap-spacing-200">
+                    <div className="w-[80px] h-[20px] bg-background-standard-secondary rounded animate-pulse" />
+                    <div className="w-[36px] h-[22px] bg-background-standard-secondary rounded animate-pulse" />
+                  </div>
+                  <SkeletonTextInput />
+                  <SkeletonButton />
+                </>
+              ) : (
+                <>
+                  <div className="w-full flex flex-row justify-start items-center gap-spacing-200">
+                    <span className="text-footnote text-content-standard-tertiary">
+                      {hasExistingApplication ? '신청된 좌석' : '내가 선택한 좌석'}
+                    </span>
+                    <strong className="text-label text-core-accent">
+                      {selectedSeat === null ? '미선택' : selectedSeat}{' '}
+                    </strong>
+                  </div>
+                  {!hasExistingApplication && (
+                    <TextInput
+                      value={unselectedReason}
+                      onChange={handleUnselectedReasonChange}
+                      placeholder="미선택 사유를 입력해주세요"
+                      disabled={selectedSeat !== null}
+                      required={selectedSeat === null}
+                    />
+                  )}
+                  <Button type="submit" primary>
+                    <span className="text-center w-full">
+                      {hasExistingApplication ? '잔류 신청 취소하기' : '잔류 신청하기'}
+                    </span>
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </form>
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <div className="w-full h-full overflow-auto">
             {loading ? (
               <SkeletonLoader />
             ) : (
@@ -324,82 +401,9 @@ export default function StayApply({ refreshMyStatus }) {
               />
             )}
           </div>
-          <div
-            className="flex flex-row gap-spacing-100 justify-center items-center cursor-pointer"
-            onClick={openModal}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && openModal()}>
-            <MaterialSymbol icon="fullscreen" size={16} weight={300} className="text-content-standard-tertiary" />
-            <strong className="text-label text-content-standard-tertiary">크게 보기</strong>
-          </div>
-        </div>
-        <div className="md:h-[430px] w-full flex flex-col justify-between items-start gap-spacing-700">
-          <div className="w-full flex flex-row flex-wrap md:flex-col justify-start items-start gap-spacing-200">
-            <LegendItem color="bg-core-accent-translucent" text="이미 신청된 자리" />
-            <LegendItem color="bg-core-accent" text="현재 선택한 자리" />
-            <LegendItem
-              color="bg-background-standard-secondary border border-core-accent-secondary"
-              text="선택 가능한 자리"
-            />
-            <LegendItem color="bg-components-translucent-secondary" text="선택 불가능한자리" />
-          </div>
-          <div className="w-full flex flex-col justify-start items-start gap-spacing-200">
-            <strong className="text-label">좌석 선택</strong>
-            {loading ? (
-              <>
-                <div className="w-full flex flex-row justify-start items-center gap-spacing-200">
-                  <div className="w-[80px] h-[20px] bg-background-standard-secondary rounded animate-pulse" />
-                  <div className="w-[36px] h-[22px] bg-background-standard-secondary rounded animate-pulse" />
-                </div>
-                <SkeletonTextInput />
-                <SkeletonButton />
-              </>
-            ) : (
-              <>
-                <div className="w-full flex flex-row justify-start items-center gap-spacing-200">
-                  <span className="text-footnote text-content-standard-tertiary">
-                    {hasExistingApplication ? '신청된 좌석' : '내가 선택한 좌석'}
-                  </span>
-                  <strong className="text-label text-core-accent">
-                    {selectedSeat === null ? '미선택' : selectedSeat}{' '}
-                  </strong>
-                </div>
-                {!hasExistingApplication && (
-                  <TextInput
-                    value={unselectedReason}
-                    onChange={handleUnselectedReasonChange}
-                    placeholder="미선택 사유를 입력해주세요"
-                    disabled={selectedSeat !== null}
-                    required={selectedSeat === null}
-                  />
-                )}
-                <Button type="submit" primary>
-                  <span className="text-center w-full">
-                    {hasExistingApplication ? '잔류 신청 취소하기' : '잔류 신청하기'}
-                  </span>
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
-      </form>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <div className="w-full h-full overflow-auto">
-          {loading ? (
-            <SkeletonLoader />
-          ) : (
-            <Seats
-              selectedSeat={selectedSeat}
-              reservedSeats={reservedSeats}
-              currentUser={currentUser}
-              onSeatSelect={handleSeatSelect}
-              selectableSeats={selectableSeats}
-              isSelectable={!hasExistingApplication}
-            />
-          )}
-        </div>
-      </Modal>
-    </Box>
+        </Modal>
+      </Box>
+      {hasExistingApplication && <StayOutgoApply />}
+    </>
   );
 }
