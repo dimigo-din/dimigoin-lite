@@ -1,14 +1,13 @@
-import { useGoogleLogin } from "@react-oauth/google";
-import { googleLogin } from "@/service/auth";
-import {toast} from "react-toastify";
+import { googleLogin } from '@/service/auth';
+import { useGoogleLogin } from '@react-oauth/google';
+import { toast } from 'react-toastify';
 
 const useLogin = () => {
-
   const login = useGoogleLogin({
-    hosted_domain: "dimigo.hs.kr",
-    flow: "auth-code",
-    ux_mode: "popup",
-    redirect_uri: "https://localhost:3000",
+    hosted_domain: 'dimigo.hs.kr',
+    flow: 'auth-code',
+    ux_mode: 'popup',
+    redirect_uri: 'https://lite.dimigo.in',
     onSuccess: async (auth) => {
       try {
         await googleLogin(auth.code);
