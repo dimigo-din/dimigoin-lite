@@ -14,7 +14,7 @@ const SkeletonLoader = () => (
   <div className="w-full h-[380px] md:w-[864px] bg-background-standard-tertiary rounded-radius-600 animate-pulse" />
 );
 
-const TextLabel = ({ children, className = '' }) => <span className={`text-footnote ${className}`}>{children}</span>;
+const TextLabel = ({ children, className = '' }) => <span className={`text-label ${className}`}>{children}</span>;
 
 const TimeSelector = ({ label, value, onChange }) => (
   <div className="flex flex-col justify-start items-start gap-spacing-200">
@@ -23,7 +23,7 @@ const TimeSelector = ({ label, value, onChange }) => (
       type="time"
       value={value}
       onChange={onChange}
-      className="w-[120px] px-spacing-300 py-spacing-150 bg-background-standard-secondary border border-line-outline rounded-radius-300 text-content-standard-tertiary text-caption"
+      className="w-[120px] px-spacing-300 py-spacing-150 bg-background-standard-secondary border border-line-outline rounded-radius-300 text-content-standard-tertiary text-footnote"
     />
   </div>
 );
