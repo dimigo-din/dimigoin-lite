@@ -279,6 +279,70 @@ const Modal = ({ isOpen, onClose, children }) => {
   );
 };
 
+const StayListModal = ({ isOpen, onClose, applications }) => {
+  if (!isOpen) return null;
+
+  const groupedApplications = applications.reduce((acc, app) => {
+    const classKey = `${app.student.grade}-${app.student.class}`;
+    if (!acc[classKey]) {
+      acc[classKey] = [];
+    }
+    acc[classKey].push(app);
+    return acc;
+  }, {});
+
+  const sortedClasses = Object.entries(groupedApplications).sort((a, b) => {
+    const [aGrade, aClass] = a[0].split('-');
+    const [bGrade, bClass] = b[0].split('-');
+    return aGrade - bGrade || aClass.localeCompare(bClass);
+  });
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+      <div className="h-full md:h-auto md:max-h-[80vh] w-full md:max-w-[600px] md:m-spacing-200 flex flex-col gap-spacing-300 bg-background-standard-primary p-spacing-550 rounded-radius-300 overflow-auto">
+        <div className="flex justify-between items-center">
+          <strong className="text-heading text-content-standard-primary">잔류 신청 목록</strong>
+          <button type="button" onClick={onClose} className="text-content-standard-primary">
+            <MaterialSymbol weight={300} icon="close" size={24} />
+          </button>
+        </div>
+        <div className="overflow-x-auto">
+          {sortedClasses.map(([classKey, classApps]) => {
+            // Sort students by number within each class
+            const sortedApps = classApps.sort((a, b) => a.student.number - b.student.number);
+
+            return (
+              <div key={classKey} className="mb-spacing-400">
+                <h3 className="text-subheading text-content-standard-primary mb-spacing-200">
+                  {classKey.split('-')[0]}학년 {classKey.split('-')[1]}반
+                </h3>
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-background-standard-secondary">
+                      <th className="p-spacing-200 text-left">번호</th>
+                      <th className="p-spacing-200 text-left">이름</th>
+                      <th className="p-spacing-200 text-left">좌석</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedApps.map((app, index) => (
+                      <tr key={index} className="border-b border-background-standard-secondary">
+                        <td className="p-spacing-200">{app.student.number}</td>
+                        <td className="p-spacing-200">{app.student.name}</td>
+                        <td className="p-spacing-200">{app.seat === 'NONE' ? '미선택' : app.seat}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function StayApply({ refreshMyStatus }) {
   const {
     selectedSeat,
@@ -292,17 +356,20 @@ export default function StayApply({ refreshMyStatus }) {
     handleSeatSelect,
     handleUnselectedReasonChange,
     handleSubmit,
+    stayData,
   } = useStayApplication(refreshMyStatus);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isStayListModalOpen, setIsStayListModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  const openStayListModal = () => setIsStayListModalOpen(true);
+  const closeStayListModal = () => setIsStayListModalOpen(false);
 
   if (error) {
     return <div>Error: {error}</div>;
   }
-
   return (
     <>
       <Box
@@ -326,14 +393,25 @@ export default function StayApply({ refreshMyStatus }) {
                 />
               )}
             </div>
-            <div
-              className="flex flex-row gap-spacing-100 justify-center items-center cursor-pointer"
-              onClick={openModal}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && openModal()}>
-              <MaterialSymbol icon="fullscreen" size={16} weight={300} className="text-content-standard-tertiary" />
-              <strong className="text-label text-content-standard-tertiary">크게 보기</strong>
+            <div className="flex flex-row gap-spacing-300">
+              <div
+                className="flex flex-row gap-spacing-100 justify-center items-center cursor-pointer"
+                onClick={openStayListModal}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && StayListModal()}>
+                <MaterialSymbol icon="people" size={16} weight={300} className="text-content-standard-tertiary" />
+                <strong className="text-label text-content-standard-tertiary">신청 목록 보기</strong>
+              </div>
+              <div
+                className="flex flex-row gap-spacing-100 justify-center items-center cursor-pointer"
+                onClick={openModal}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && openModal()}>
+                <MaterialSymbol icon="fullscreen" size={16} weight={300} className="text-content-standard-tertiary" />
+                <strong className="text-label text-content-standard-tertiary">크게 보기</strong>
+              </div>
             </div>
           </div>
           <div className="md:h-[430px] w-full flex flex-col justify-between items-start gap-spacing-700">
@@ -386,23 +464,28 @@ export default function StayApply({ refreshMyStatus }) {
             </div>
           </div>
         </form>
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <div className="w-full h-full overflow-auto">
-            {loading ? (
-              <SkeletonLoader />
-            ) : (
-              <Seats
-                selectedSeat={selectedSeat}
-                reservedSeats={reservedSeats}
-                currentUser={currentUser}
-                onSeatSelect={handleSeatSelect}
-                selectableSeats={selectableSeats}
-                isSelectable={!hasExistingApplication}
-              />
-            )}
-          </div>
-        </Modal>
       </Box>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div className="w-full h-full overflow-auto">
+          {loading ? (
+            <SkeletonLoader />
+          ) : (
+            <Seats
+              selectedSeat={selectedSeat}
+              reservedSeats={reservedSeats}
+              currentUser={currentUser}
+              onSeatSelect={handleSeatSelect}
+              selectableSeats={selectableSeats}
+              isSelectable={!hasExistingApplication}
+            />
+          )}
+        </div>
+      </Modal>
+      <StayListModal
+        isOpen={isStayListModalOpen}
+        onClose={closeStayListModal}
+        applications={stayData?.applications || []}
+      />
       {hasExistingApplication && <StayOutgoApply />}
     </>
   );
