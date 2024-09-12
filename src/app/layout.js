@@ -28,6 +28,7 @@ export default function RootLayout({ children }) {
       <head>
         <meta property="og:image" content="https://lite.dimigo.in/images/og-image.png" />
         <meta name="viewport" content="initial-scale=1, viewport-fit=cover" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <meta name="apple-mobile-web-app-status-bar-style" media="(prefers-color-scheme: light)" content="#F6F6FA" />
         <meta name="apple-mobile-web-app-status-bar-style" media="(prefers-color-scheme: dark)" content="#09090A" />
