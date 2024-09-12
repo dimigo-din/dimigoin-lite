@@ -6,7 +6,8 @@ import Swal from 'sweetalert2';
 
 export const useLaundryData = () => {
   const [laundryData, setLaundryData] = useState(null);
-  const [selectedTimetable, setSelectedTimetable] = useState(null);
+  const [selectedWasher, setSelectedWasher] = useState(null);
+  const [selectedDryer, setSelectedDryer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingTimeSlots, setLoadingTimeSlots] = useState({});
   const [currentUser, setCurrentUser] = useState(null);
@@ -28,13 +29,19 @@ export const useLaundryData = () => {
       }
       const data = await getLaundryData();
       setLaundryData(data);
-      if (data.timetables.length > 0) {
-        setSelectedTimetable((prevSelected) => {
-          if (prevSelected) {
-            return data.timetables.find((t) => t._id === prevSelected._id) || data.timetables[0];
-          }
-          return data.timetables[0];
-        });
+
+      const washers = data.timetables.filter((t) => Number(t.laundry.floor) < 10);
+      const dryers = data.timetables.filter((t) => Number(t.laundry.floor) >= 10);
+
+      if (washers.length > 0) {
+        setSelectedWasher((prevSelected) =>
+          prevSelected ? washers.find((w) => w._id === prevSelected._id) || washers[0] : washers[0],
+        );
+      }
+      if (dryers.length > 0) {
+        setSelectedDryer((prevSelected) =>
+          prevSelected ? dryers.find((d) => d._id === prevSelected._id) || dryers[0] : dryers[0],
+        );
       }
     } catch (err) {
       toast.error(err.message || '데이터를 불러오는 데 실패했습니다.');
@@ -49,17 +56,22 @@ export const useLaundryData = () => {
     fetchLaundryData();
   }, [fetchLaundryData]);
 
-  const handleTimetableChange = (timetable) => {
-    setSelectedTimetable(timetable);
+  const handleTimetableChange = (timetable, isWasher) => {
+    if (isWasher) {
+      setSelectedWasher(timetable);
+    } else {
+      setSelectedDryer(timetable);
+    }
   };
 
-  const handleTimeSelect = async (timeIndex) => {
-    if (!selectedTimetable || !currentUser) return;
+  const handleTimeSelect = async (timeIndex, isWasher) => {
+    const selectedMachine = isWasher ? selectedWasher : selectedDryer;
+    if (!selectedMachine || !currentUser) return;
 
     setLoadingTimeSlots((prev) => ({ ...prev, [timeIndex]: true }));
 
     try {
-      if (isTimeSlotReservedByCurrentUser(timeIndex)) {
+      if (isTimeSlotReservedByCurrentUser(timeIndex, isWasher)) {
         const result = await Swal.fire({
           title: '예약 취소',
           text: '정말로 예약을 취소하시겠습니까?',
@@ -76,7 +88,7 @@ export const useLaundryData = () => {
           return;
         }
       } else {
-        await applyLaundry(selectedTimetable.laundry._id, timeIndex);
+        await applyLaundry(selectedMachine.laundry._id, timeIndex);
         toast.success('예약이 완료되었습니다.');
       }
     } catch (err) {
@@ -87,18 +99,20 @@ export const useLaundryData = () => {
     }
   };
 
-  const isTimeSlotReservedByCurrentUser = (timeIndex) => {
-    if (!laundryData || !selectedTimetable || !currentUser) return false;
+  const isTimeSlotReservedByCurrentUser = (timeIndex, isWasher) => {
+    if (!laundryData || (!selectedWasher && !selectedDryer) || !currentUser) return false;
+    const selectedMachine = isWasher ? selectedWasher : selectedDryer;
     const application = laundryData.applications.find(
       (app) =>
-        app.timetable._id === selectedTimetable._id && app.student.name === currentUser.name && app.time === timeIndex,
+        app.timetable._id === selectedMachine._id && app.student.name === currentUser.name && app.time === timeIndex,
     );
     return !!application;
   };
 
   return {
     laundryData,
-    selectedTimetable,
+    selectedWasher,
+    selectedDryer,
     loading,
     loadingTimeSlots,
     handleTimetableChange,

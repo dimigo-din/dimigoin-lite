@@ -59,7 +59,10 @@ const LaundryTimeItem = ({ time, status, user, onSelect, index, isLoading, curre
 
 const SkeletonLoader = () => (
   <div className="flex flex-col gap-spacing-400 w-full animate-pulse">
-    <div className="w-full h-[48px] bg-background-standard-secondary rounded-radius-400" />
+    <div className="flex flex-col gap-spacing-200">
+      <div className="w-full h-[48px] bg-background-standard-secondary rounded-radius-400" />
+      <div className="w-full h-[48px] bg-background-standard-secondary rounded-radius-400" />
+    </div>
     <div className="flex flex-col gap-spacing-300">
       {[...Array(5)].map((_, index) => (
         <div key={index} className="w-full h-[48px] bg-background-standard-secondary rounded-radius-300" />
@@ -71,7 +74,8 @@ const SkeletonLoader = () => (
 export default function LaundryApply({ refreshMyStatus }) {
   const {
     laundryData,
-    selectedTimetable,
+    selectedWasher,
+    selectedDryer,
     loading,
     loadingTimeSlots,
     handleTimetableChange,
@@ -82,7 +86,7 @@ export default function LaundryApply({ refreshMyStatus }) {
   const [selectedMachineType, setSelectedMachineType] = useState('세탁기');
 
   const handleTimeSelectAndRefresh = async (index) => {
-    await handleTimeSelect(index);
+    await handleTimeSelect(index, selectedMachineType === '세탁기');
     refreshMyStatus();
   };
 
@@ -103,12 +107,14 @@ export default function LaundryApply({ refreshMyStatus }) {
     );
   }, [laundryData, selectedMachineType, getMachineType]);
 
+  const selectedMachine = selectedMachineType === '세탁기' ? selectedWasher : selectedDryer;
+
   const renderContent = () => {
     if (loading) {
       return <SkeletonLoader />;
     }
 
-    if (!laundryData || !selectedTimetable) {
+    if (!laundryData || !selectedMachine) {
       return <div className="flex justify-center items-center h-40">데이터를 불러올 수 없습니다.</div>;
     }
 
@@ -132,16 +138,16 @@ export default function LaundryApply({ refreshMyStatus }) {
               <OptionButton
                 key={timetable._id}
                 text={`${getDisplayFloor(timetable.laundry.floor)}층 ${timetable.laundry.position}`}
-                isSelected={selectedTimetable._id === timetable._id}
-                onClick={() => handleTimetableChange(timetable)}
+                isSelected={selectedMachine._id === timetable._id}
+                onClick={() => handleTimetableChange(timetable, selectedMachineType === '세탁기')}
               />
             ))}
           </div>
         </div>
         <div className="flex flex-col gap-spacing-300">
-          {selectedTimetable.sequence.map((time, index) => {
+          {selectedMachine.sequence.map((time, index) => {
             const application = laundryData.applications.find(
-              (app) => app.timetable._id === selectedTimetable._id && app.time === index,
+              (app) => app.timetable._id === selectedMachine._id && app.time === index,
             );
             return (
               <LaundryTimeItem
