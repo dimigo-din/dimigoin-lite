@@ -11,7 +11,7 @@ const MEALS = [
 ];
 
 const SkeletonLoader = () => (
-  <div className="w-full h-[380px] md:w-[864px] bg-background-standard-tertiary rounded animate-pulse" />
+  <div className="w-full h-[380px] md:w-[864px] bg-background-standard-tertiary rounded-radius-600 animate-pulse" />
 );
 
 const TextLabel = ({ children, className = '' }) => <span className={`text-footnote ${className}`}>{children}</span>;

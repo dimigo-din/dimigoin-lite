@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
+import { useLogin } from '@/lib/login';
 import Image from 'next/image';
-import {useLogin} from "@/lib/login";
 
 export default function LoginArea() {
   const { login } = useLogin();
 
   const handleGoogleLogin = () => {
     login();
-  }
+  };
 
   return (
     <div className="w-full md:w-auto flex flex-col bg-background-standard-primary rounded-radius-700 p-spacing-500 gap-y-spacing-550 m-spacing-500">
@@ -28,7 +28,7 @@ export default function LoginArea() {
         <strong className="text-content-standard-primary text-body">이메일, 이름, 학번</strong>
       </div>
       <div
-        className="w-full md:w-[360px] bg-components-translucent-tertiary border border-line-outline rounded-radius-300 flex flex-row justify-center items-center gap-spacing-200 px-spacing-500 py-spacing-400"
+        className="cursor-pointer w-full md:w-[360px] bg-components-translucent-tertiary border border-line-outline rounded-radius-300 flex flex-row justify-center items-center gap-spacing-200 px-spacing-500 py-spacing-400"
         onClick={handleGoogleLogin}
         onKeyDown={handleGoogleLogin}>
         <Image src="/images/google_icon.svg" alt="google" width={20} height={20} />

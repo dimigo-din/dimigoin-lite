@@ -2,7 +2,7 @@
 
 import Box from '@/components/widgets/Box';
 import { useLaundryData } from '@/hooks/useLaundryData';
-import React from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 
 const OptionButton = ({ text, isSelected, onClick }) => {
   return (
@@ -79,10 +79,29 @@ export default function LaundryApply({ refreshMyStatus }) {
     currentUser,
   } = useLaundryData();
 
+  const [selectedMachineType, setSelectedMachineType] = useState('세탁기');
+
   const handleTimeSelectAndRefresh = async (index) => {
     await handleTimeSelect(index);
     refreshMyStatus();
   };
+
+  const getMachineType = useCallback((floor) => {
+    const floorNumber = Number.parseInt(floor);
+    return floorNumber >= 10 ? '건조기' : '세탁기';
+  }, []);
+
+  const getDisplayFloor = useCallback((floor) => {
+    const floorNumber = Number.parseInt(floor);
+    return floorNumber >= 10 ? `${floorNumber - 10}` : floor;
+  }, []);
+
+  const filteredTimetables = useMemo(() => {
+    return (
+      laundryData?.timetables.filter((timetable) => getMachineType(timetable.laundry.floor) === selectedMachineType) ||
+      []
+    );
+  }, [laundryData, selectedMachineType, getMachineType]);
 
   const renderContent = () => {
     if (loading) {
@@ -97,10 +116,22 @@ export default function LaundryApply({ refreshMyStatus }) {
       <>
         <div className="w-full flex flex-col gap-spacing-200 justify-start items-start">
           <div className="w-full flex flex-row gap-spacing-100 bg-components-translucent-secondary p-spacing-100 rounded-radius-400">
-            {laundryData.timetables.map((timetable) => (
+            <OptionButton
+              text="세탁기"
+              isSelected={selectedMachineType === '세탁기'}
+              onClick={() => setSelectedMachineType('세탁기')}
+            />
+            <OptionButton
+              text="건조기"
+              isSelected={selectedMachineType === '건조기'}
+              onClick={() => setSelectedMachineType('건조기')}
+            />
+          </div>
+          <div className="w-full flex flex-row gap-spacing-100 bg-components-translucent-secondary p-spacing-100 rounded-radius-400">
+            {filteredTimetables.map((timetable) => (
               <OptionButton
                 key={timetable._id}
-                text={`${timetable.laundry.floor}층 ${timetable.laundry.position}`}
+                text={`${getDisplayFloor(timetable.laundry.floor)}층 ${timetable.laundry.position}`}
                 isSelected={selectedTimetable._id === timetable._id}
                 onClick={() => handleTimetableChange(timetable)}
               />

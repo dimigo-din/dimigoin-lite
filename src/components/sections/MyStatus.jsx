@@ -1,12 +1,12 @@
 'use client';
 
 import FrigoApply from '@/components/sections/FrigoApply';
+import LaundryApply from '@/components/sections/LaundryApply';
 import StayApply from '@/components/sections/StayApply';
-import StayOutgoApply from '@/components/sections/StayOutgoApply';
 import Box from '@/components/widgets/Box';
 import { useMyStatus } from '@/hooks/useMyStatus';
-import React from 'react';
-import LaundryApply from './LaundryApply';
+import { getUserData } from '@/service/auth';
+import React, { useEffect, useState } from 'react';
 
 const StatusItem = ({ label, status, renderStatus }) => (
   <div className="flex flex-col justify-center items-center gap-spacing-100">
@@ -28,6 +28,17 @@ const SkeletonLoader = () => (
 
 export default function MyStatus() {
   const { statusData, isLoading, error, renderStatus, refreshStatus } = useMyStatus();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userData = await getUserData();
+      if (userData) {
+        setUser(userData);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   if (error) {
     return (
@@ -56,7 +67,7 @@ export default function MyStatus() {
       </Box>
       <LaundryApply refreshMyStatus={refreshStatus} />
       <StayApply refreshMyStatus={refreshStatus} />
-      <FrigoApply />
+      {user && user.grade === 3 && <FrigoApply refreshMyStatus={refreshStatus} />}
     </>
   );
 }

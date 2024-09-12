@@ -292,7 +292,7 @@ export default function StayApply({ refreshMyStatus }) {
     handleSeatSelect,
     handleUnselectedReasonChange,
     handleSubmit,
-  } = useStayApplication(refreshMyStatus); // refreshMyStatus를 인자로 전달
+  } = useStayApplication(refreshMyStatus);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
