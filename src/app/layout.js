@@ -12,6 +12,7 @@ const suit = localFont({
       path: './fonts/SUIT-Variable.woff2',
     },
   ],
+
   variable: '--font-suit',
 });
 
@@ -23,7 +24,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ko" className="h-full">
+    <html lang="ko">
       <head>
         <meta property="og:image" content="https://lite.dimigo.in/images/og-image.png" />
         <meta name="viewport" content="initial-scale=1, viewport-fit=cover" />
@@ -33,9 +34,9 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F6F6FA" />
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090A" />
       </head>
-      <body className={`${suit.className} h-full`}>
+      <body className={suit.className}>
         <GoogleOAuthProvider clientId="490381879-9976i94b3vvu2pabjttjgma8hscajrin.apps.googleusercontent.com">
-          <div className="flex flex-col min-h-full">{children}</div>
+          {children}
           <ToastContainer />
         </GoogleOAuthProvider>
       </body>
