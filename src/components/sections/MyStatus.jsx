@@ -56,7 +56,9 @@ export default function MyStatus() {
         renderStatus={renderStatus}
       />
       <StatusItem label="세탁" status={statusData.laundry} renderStatus={renderStatus} />
-      <StatusItem label="금요귀가" status={statusData.frigo.status} renderStatus={renderStatus} />
+      {user && user.grade === 3 && (
+        <StatusItem label="금요귀가" status={statusData.frigo.status} renderStatus={renderStatus} />
+      )}
     </div>
   );
 
