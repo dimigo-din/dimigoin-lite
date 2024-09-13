@@ -19,8 +19,8 @@ export default function Footer() {
         <div className="flex flex-col gap-spacing-100 items-end self-end">
           <span className="text-label text-content-standard-tertiary">
             Designed by{' '}
-            <Link href="https://github.com/ableuk" target="_blank" rel="noreferrer">
-              ableuk
+            <Link href="https://www.instagram.com/jiinnuukk/" target="_blank" rel="noreferrer">
+              jiinnuukk
             </Link>
             {' / '}
             Developed by{' '}
