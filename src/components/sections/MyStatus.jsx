@@ -17,7 +17,7 @@ const StatusItem = ({ label, status, renderStatus }) => (
 
 const SkeletonLoader = () => (
   <div className="w-full flex flex-row items-center justify-around px-spacing-500 py-spacing-200">
-    {[...Array(3)].map((_, index) => (
+    {[...Array(2)].map((_, index) => (
       <div key={index} className="flex flex-col justify-center items-center gap-spacing-100">
         <div className="w-16 h-[22px] bg-background-standard-secondary rounded animate-pulse" />
         <div className="w-20 h-[28px] bg-background-standard-secondary rounded animate-pulse" />
