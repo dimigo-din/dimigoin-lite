@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F6F6FA" />
         <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090A" />
       </head>
-      <body className={suit.className}>
+      <body className={suit.variable}>
         <GoogleOAuthProvider clientId="490381879-9976i94b3vvu2pabjttjgma8hscajrin.apps.googleusercontent.com">
           {children}
           <ToastContainer />
